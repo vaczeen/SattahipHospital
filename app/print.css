@@ -1,0 +1,38 @@
+@font-face {
+    font-family: 'THSarabun';
+    src: url('./fonts/THSarabun.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'THSarabun';
+    src: url('./fonts/THSarabun Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+.print-area {
+    display: none;
+    font-family: 'THSarabun', sans-serif;
+    font-size: 16pt;
+}
+
+@media print {
+    body>*:not(.print-area) {
+        display: none;
+    }
+
+    .print-area {
+        display: block;
+        width: 100%;
+        padding: 20mm;
+        box-sizing: border-box;
+        font-family: 'THSarabun', sans-serif;
+    }
+
+    @page {
+        size: A4;
+        margin: 0;
+    }
+}

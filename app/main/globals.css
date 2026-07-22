@@ -1,0 +1,76 @@
+@import "tailwindcss";
+
+@theme {
+  --color-background: hsl(0 0% 100%);
+  --color-foreground: hsl(222.2 84% 4.9%);
+
+  --color-card: hsl(0 0% 100%);
+  --color-card-foreground: hsl(222.2 84% 4.9%);
+
+  --color-popover: hsl(0 0% 100%);
+  --color-popover-foreground: hsl(222.2 84% 4.9%);
+
+  --color-primary: hsl(231 55% 27%);
+  --color-primary-foreground: hsl(210 40% 98%);
+
+  --color-secondary: hsl(202 85% 50%);
+  --color-secondary-foreground: hsl(210 40% 98%);
+
+  --color-muted: hsl(210 40% 96.1%);
+  --color-muted-foreground: hsl(215.4 16.3% 46.9%);
+
+  --color-accent: hsl(210 40% 96.1%);
+  --color-accent-foreground: hsl(222.2 47.4% 11.2%);
+
+  --color-destructive: hsl(0 84.2% 60.2%);
+  --color-destructive-foreground: hsl(210 40% 98%);
+
+  --color-border: hsl(214.3 31.8% 91.4%);
+  --color-input: hsl(214.3 31.8% 91.4%);
+  --color-ring: hsl(222.2 84% 4.9%);
+
+  --radius: 0.5rem;
+}
+
+/* 
+   We still need to set base styles for the page.
+   In v4, @layer base works, or just root styles.
+*/
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+  }
+}
+
+/* Custom Navigation Animation */
+.nav-item {
+  width: 110px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.45s;
+  /* Smooth text color transition */
+  transition: background-position-x 0.9s linear;
+  text-align: center;
+  text-decoration: none;
+}
+
+.nav-item:hover {
+  background: url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0ndXRmLTgnPz48c3ZnIHZlcnNpb249JzEuMScgaWQ9J0xheWVyXzEnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZycgeG1sbnM6eGxpbms9J2h0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsnIHg9JzBweCcgeT0nMHB4JyB3aWR0aD0nMzkwcHgnIGhlaWdodD0nNTBweCcgdmlld0JveD0nMCAwIDM5MCA1MCcgZW5hYmxlLWJhY2tncm91bmQ9J25ldyAwIDAgMzkwIDUwJyB4bWw6c3BhY2U9J3ByZXNlcnZlJz48cGF0aCBmaWxsPSdub25lJyBzdHJva2U9JyNmZmZmZmYnIHN0cm9rZS13aWR0aD0nMS41JyBzdHJva2UtbWl0ZXJsaW1pdD0nMTAnIGQ9J00wLDQ3LjU4NWMwLDAsOTcuNSwwLDEzMCwwYzEzLjc1LDAsMjguNzQtMzguNzc4LDQ2LjE2OC0xOS40MTZDMTkyLjY2OSw0Ni41LDI0My42MDMsNDcuNTg1LDI2MCw0Ny41ODVjMzEuODIxLDAsMTMwLDAsMTMwLDAnLz48L3N2Zz4=");
+  animation: line 1.5s;
+  color: #ffffff !important;
+  /* Force red color on hover to match SVG */
+}
+
+@keyframes line {
+  0% {
+    background-position-x: 390px;
+  }
+}
