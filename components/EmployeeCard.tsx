@@ -207,8 +207,8 @@ export function EmployeeCard() {
 
   return (
     <div className="w-full">
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-3xl font-bold text-gray-950 border-l-4 border-emerald-700 pl-4">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-3">
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-950 border-l-4 border-emerald-700 pl-4">
           เมนูสำหรับเจ้าหน้าที่
         </h1>
         {totalPages > 1 && (

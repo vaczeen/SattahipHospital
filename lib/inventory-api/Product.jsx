@@ -8,7 +8,7 @@ export const createProduct = async (token, form) => {
   });
 };
 
-export const listProduct = async (count = 20) => {
+export const listProduct = async (count = 100) => {
   return await axios.get("/api/products/" + count);
 };
 

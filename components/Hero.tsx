@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export function Hero() {
   return (
-    <div className="relative w-full h-600px] flex items-center overflow-hidden">
+    <div className="relative w-full h-[300px] sm:h-[400px] md:h-[500px] lg:h-[600px] flex items-center overflow-hidden">
       {/* Background Image */}
       <Image
         src="/km10pic.png"
@@ -24,19 +24,19 @@ export function Hero() {
           <span className=" text-teal-500 font-bold tracking-widest uppercase text-sm mb-4 block">
             Caring for Life
           </span>
-          <h1 className="text-4xl md:text-6xl font-tidy text-gray-800 font-bold mb-6 leading-tight">
+          <h1 className="text-3xl sm:text-4xl md:text-6xl font-tidy text-gray-800 font-bold mb-4 sm:mb-6 leading-tight">
             โรงพยาบาลสัตหีบ
           </h1>
-          <h1 className="text-4xl md:text-6xl font-tidy text-gray-800 font-bold mb-6 leading-tight">
+          <h1 className="text-3xl sm:text-4xl md:text-6xl font-tidy text-gray-800 font-bold mb-4 sm:mb-6 leading-tight">
             ยินดีต้อนรับ
           </h1>
-          <p className="max-w-xl text-muted-foreground mb-8 ">
+          <p className="max-w-xl text-muted-foreground mb-6 sm:mb-8 text-sm sm:text-base">
             บริการด้วยความปลอดภัย มุ่งสู่ความทันสมัยด้วยเทคโนโลยี
             พัฒนาบุคลากรอย่างต่อเนื่อง
           </p>
-          <div className="flex flex-col md:flex-row gap-4">
+          <div className="flex flex-col sm:flex-row gap-4">
             <Link
-              className="bg-gray-950 text-white px-8 py-3 rounded-full hover:bg-gray-700 hover:text-white transition-colors font-bold"
+              className="bg-gray-950 text-white px-6 sm:px-8 py-3 rounded-full hover:bg-gray-700 hover:text-white transition-colors font-bold text-center"
               href="/main/services/clinics"
             >
               บริการของเรา
@@ -45,7 +45,7 @@ export function Hero() {
         </div>
 
         {/* Doctor Image */}
-        <div className="hidden md:flex justify-center items-end h-full relative">
+        <div className="hidden lg:flex justify-center items-end h-full relative">
           <div className="relative w-[2500px] h-[600px] mt-auto">
             {/* <Image
                             src="/doc.png"

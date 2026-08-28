@@ -4,11 +4,12 @@ import { useState, useMemo } from "react";
 import { Users, FileText, ShieldAlert, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import DocumentsTab from "./DocumentsTab";
-import { departmentsData, DepartmentItem } from "@/lib/departmentsData";
 
 interface DepartmentContentProps {
   slug: string;
   initialDocuments: any[];
+  label: string;
+  description?: string;
 }
 
 const DoctorCard = ({
@@ -159,29 +160,30 @@ const staffData = {
 };
 
 export default function DepartmentContent({
-  slug,
   initialDocuments,
+  slug,
+  label,
+  description,
 }: DepartmentContentProps) {
   const [activeTab, setActiveTab] = useState<
     "structure" | "documents" | "policies"
   >("structure");
 
   // Lookup department locally on the client to avoid serialization issues with icons
-  const department = useMemo(() => {
-    return departmentsData.find((d) => d.slug === slug);
-  }, [slug]);
+  // const department = useMemo(() => {
+  //   return departmentsData.find((d) => d.slug === slug);
+  // }, [slug]);
 
   // Find head of THIS department
   const currentHead = useMemo(() => {
-    if (!department) return null;
     return staffData.departmentHeads.find(
       (h) =>
-        h.dept.toLowerCase().includes(department.label.toLowerCase()) ||
-        department.label.toLowerCase().includes(h.dept.toLowerCase()),
+        h.dept.toLowerCase().includes(label.toLowerCase()) ||
+        label.toLowerCase().includes(h.dept.toLowerCase()),
     );
-  }, [department]);
+  }, [label]);
 
-  if (!department) return null;
+  // if (!department) return null;
 
   return (
     <div className="bg-white rounded-2xl shadow-xl shadow-slate-200/50 overflow-hidden border border-slate-100">
@@ -231,7 +233,7 @@ export default function DepartmentContent({
                 โครงสร้างบุคลากร
               </h2>
               <p className="text-slate-500 text-sm">
-                ทีมงานและคณะผู้บริหารของ {department.label}
+                ทีมงานและคณะผู้บริหารของ {label}
               </p>
             </div>
 
@@ -279,7 +281,8 @@ export default function DepartmentContent({
 
         {activeTab === "documents" && (
           <DocumentsTab
-            department={department}
+            slug={slug}
+            label={label}
             initialDocuments={initialDocuments}
           />
         )}
@@ -294,7 +297,7 @@ export default function DepartmentContent({
                 นโยบายหน่วยงาน
               </h3>
               <p className="text-indigo-600/80 text-sm max-w-md mx-auto">
-                นโยบายและแนวทางปฏิบัติสำคัญของ{department.label}{" "}
+                นโยบายและแนวทางปฏิบัติสำคัญของ{label}{" "}
                 กำลังอยู่ระหว่างการอัปเดตข้อมูลเข้าสู่ระบบดิจิทัล
               </p>
             </div>

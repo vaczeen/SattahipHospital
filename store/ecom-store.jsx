@@ -51,7 +51,13 @@ const ecomStore = (set, get) => ({
   getProduct: async (count) => {
     try {
       const res = await listProduct(count);
-      set({ products: res.data });
+      const sorted = [...res.data].sort((a, b) => {
+        if (a.quantity === 0 && b.quantity > 0) return 1; // a ไปท้าย
+        if (a.quantity > 0 && b.quantity === 0) return -1; // a ขึ้นก่อน
+        return 0;
+      });
+
+      set({ products: sorted });
     } catch (error) {
       console.log(error);
     }

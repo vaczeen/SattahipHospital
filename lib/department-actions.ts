@@ -5,7 +5,18 @@ import { revalidatePath } from "next/cache";
 import { writeFile, unlink, mkdir } from "fs/promises";
 import { join } from "path";
 import { cwd } from "process";
-import { departmentsData } from "./departmentsData";
+// import { departmentsData } from "./departmentsData";
+
+export async function verifyDepartmentPassword(slug: string, password: string) {
+  const dept = await prisma.departmentConfig.findUnique({
+    where: { slug },
+  });
+
+  if (!dept) return { success: false, error: "ไม่พบข้อมูลกลุ่มงาน" };
+  if (dept.uploadPassword !== password) return { success: false, error: "รหัสผ่านไม่ถูกต้อง" };
+
+  return { success: true };
+}
 
 export async function getDepartmentDocuments(departmentId: string) {
   try {
@@ -34,7 +45,10 @@ export async function uploadDepartmentDocument(formData: FormData) {
     }
 
     // Find department to check password and get folder
-    const dept = departmentsData.find((d) => d.slug === departmentId);
+    const dept = await prisma.departmentConfig.findUnique({
+      where: { slug: departmentId },
+    });
+
     if (!dept) {
       return { success: false, error: "ไม่พบข้อมูลกลุ่มงาน" };
     }
@@ -99,20 +113,18 @@ export async function deleteDepartmentDocument(
 
     // Try to delete the file
     if (fileUrl) {
-      // fileUrl is like /uploads/folder/filename
-      // Remove leading slash and join with public
       const filepath = join(cwd(), "public", fileUrl);
       try {
         await unlink(filepath);
       } catch (e) {
-        console.error("Failed to delete file from disk:", e);
+        console.error("Failed to delete file:", e);
       }
     }
 
     revalidatePath(`/main/about/department/${departmentId}`);
     return { success: true };
   } catch (error) {
-    console.error("Failed to delete document:", error);
+    console.error("Failed to delete:", error);
     return { success: false, error: "Failed to delete document" };
   }
 }

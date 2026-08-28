@@ -17,12 +17,25 @@ model Procurement {
   createdAt   DateTime @default(now())
 }
 
-model DepartmentDocument {
+model DepartmentConfig {
   id           Int      @id @default(autoincrement())
+  slug         String   @unique
+  label        String
+  description  String?
+  uploadPassword String
+  uploadDir    String
+  documents      DepartmentDocument[]
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model DepartmentDocument{
+  id           Int              @id @default(autoincrement())
   departmentId String
   title        String
   fileUrl      String
-  uploadedAt   DateTime @default(now())
+  uploadedAt   DateTime         @default(now())
+  department   DepartmentConfig @relation(fields: [departmentId], references: [slug])
 }
 
 model PolicyDocument {

@@ -1,0 +1,17 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../node_modules/@prisma/gtw-client"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("GTW_DATABASE_URL")
+}
+
+model users {
+  id       Int    @id @default(autoincrement())
+  username String @unique
+  // ใส่เฉพาะ field ที่ต้องการใช้ ไม่ต้อง map ทั้งหมด
+  
+  @@map("users") // ← ชื่อ table จริงใน vendor DB
+}

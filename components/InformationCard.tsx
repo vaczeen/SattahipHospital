@@ -15,11 +15,11 @@ export function InformationCard({ title, imageSrc, extraImages, onClick }: Infor
         <div
             onClick={onClick}
             className={cn(
-                "group relative bg-white border border-border/50 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 h-full flex flex-col items-center p-8 text-center",
+                "group relative bg-white border border-border/50 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 h-full flex flex-col items-center p-4 sm:p-6 md:p-8 text-center",
                 onClick && "cursor-pointer"
             )}
         >
-            <div className="relative w-64 h-64 mb-6 rounded-2xl overflow-hidden bg-muted group-hover:scale-105 transition-transform duration-500 shadow-inner">
+            <div className="relative w-40 h-40 sm:w-48 sm:h-48 md:w-64 md:h-64 mb-4 sm:mb-6 rounded-2xl overflow-hidden bg-muted group-hover:scale-105 transition-transform duration-500 shadow-inner">
                 {imageSrc ? (
                     <Image
                         src={imageSrc}

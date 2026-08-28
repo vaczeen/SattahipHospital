@@ -4,7 +4,7 @@ import { saveOrder, listUserCart } from "@/lib/inventory-api/user";
 import useEcomStore from "@/store/ecom-store";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
-
+import { ClipboardList, Building2, Package } from "lucide-react";
 
 const SummaryCard = () => {
   const token = useEcomStore((state) => state.token);
@@ -13,14 +13,7 @@ const SummaryCard = () => {
   const department = useEcomStore((state) => state.department);
   const [products, setProducts] = useState([]);
   const [cartTotal, setCartTotal] = useState(0);
-
-  // const [address, setAddress] = useState("");
-  // const [addressSaved, setAddressSaved] = useState(false);
-
   const router = useRouter();
-  // const uniqueDepartment = department.filter(
-  //   (item, index, self) => index === self.findIndex((d) => d.dept === item.dept)
-  // );
 
   const uniqueOffice = [...department]
     .sort((a, b) => parseInt(a.deptcode, 10) - parseInt(b.deptcode, 10))
@@ -31,10 +24,7 @@ const SummaryCard = () => {
 
   const handleOfficeChange = (e) => {
     const selectedOffice = e.target.value;
-
-    // หา row ใน DB ที่ office ตรงกับค่าที่เลือก
     const matched = department.find((row) => row.office === selectedOffice);
-
     setForm({
       office: selectedOffice,
       dept: matched?.dept || "",
@@ -47,11 +37,6 @@ const SummaryCard = () => {
     office: "",
     deptcode: "",
   });
-
-  // const handleOnchange = (e) => {
-  //   console.log(e.target.name, e.target.value);
-  //   setForm({ ...form, [e.target.name]: e.target.value });
-  // };
 
   const handleGetUserCart = (token) => {
     listUserCart(token)
@@ -82,132 +67,103 @@ const SummaryCard = () => {
       });
   };
 
-  // const handleSaveOffice = () => {
-  //   if (!department) {
-  //     return toast.warning("Please fill data");
-  //   }
-  //   saveOffice(token, department)
-  //     .then((res) => {
-  //       console.log(res);
-  //       toast.success(res.data.message);
-  //       setAddressSaved(true);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  // };
-
-
-
   useEffect(() => {
     getDepartment();
     handleGetUserCart(token);
   }, []);
 
   return (
-    <div className="mx-auto">
-      <div className="flex flex-warp gap-4">
-        {/* left */}
-        <div className="w-2/4">
-          <div className="bg-gray-100 p-4 rounded-md border shadow-md space-y-4">
-            <h1 className="text-xl font-bold ">กรุณากรอกข้อมูลให้ครบถ้วน</h1>
+    <div className="w-full min-h-[calc(100vh-80px)] flex items-start justify-center px-4 pt-4 pb-10">
+      <div className="w-full max-w-7xl p-6 rounded-2xl shadow-2xl border border-gray-700 bg-gradient-to-b from-gray-900 to-gray-800">
+        {/* Header */}
+        <div className="flex items-center gap-3 mb-6">
+          <div className="bg-white/10 backdrop-blur-sm p-2.5 rounded-xl">
+            <ClipboardList className="w-6 h-6 text-white" />
+          </div>
+          <h1 className="text-2xl font-bold text-white tracking-tight">
+            สรุปรายการเบิกพัสดุ
+          </h1>
+        </div>
 
-            <div className="py-1 ">
-              <h1 className="text-lg  ">จากฝ่าย/งาน</h1>
+        {/* Content Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+          {/* Left - ข้อมูลหน่วยงาน */}
+          <div className="bg-white/10 backdrop-blur-sm border border-white/10 rounded-2xl p-5 shadow-lg space-y-4">
+            <div className="flex items-center gap-2 mb-2">
+              <Building2 className="w-5 h-5 text-blue-400" />
+              <h2 className="text-lg font-bold text-white">ข้อมูลหน่วยงาน</h2>
+            </div>
+
+            <div className="space-y-1">
+              <label className="text-sm text-gray-400">จากฝ่าย/งาน</label>
               <select
-                className="border rounded-md w-full sm:w-64 md:w-80 lg:w-96 p-2"
+                className="w-full bg-white/5 border border-white/10 text-white rounded-xl p-2.5 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
                 name="office"
                 onChange={handleOfficeChange}
                 required
                 value={form.office}
               >
-                <option value="" disabled>
+                <option value="" disabled className="text-gray-900">
                   Please Select
                 </option>
                 {uniqueOffice.map((item) => (
-                  <option key={item.id} value={item.office}>
+                  <option key={item.id} value={item.office} className="text-gray-900">
                     {item.deptcode} {item.office}
                   </option>
                 ))}
               </select>
             </div>
 
-            <h1 className="text-lg">กลุ่มงาน</h1>
-            <input
-              className="border rounded-md w-full sm:w-64 md:w-80 lg:w-96 p-2"
-              value={form.dept}
-              readOnly
-            ></input>
-            <h1 className="text-lg">รหัสแผนงาน</h1>
-            <input
-              className="border rounded-md w-full sm:w-64 md:w-80 lg:w-96 p-2"
-              value={form.deptcode}
-              readOnly
-            ></input>
-            {/* <div className="p-2">
-              <button
-                className="p-2 rounded-md bg-gray-700 text-white shadow-md  hover:bg-gray-900 font-semibold"
-                onClick={handleSaveOffice}
-              >
-                บันทึก
-              </button>
-            </div> */}
+            <div className="space-y-1">
+              <label className="text-sm text-gray-400">กลุ่มงาน</label>
+              <input
+                className="w-full bg-white/5 border border-white/10 text-white rounded-xl p-2.5 cursor-not-allowed "
+                value={form.dept}
+                readOnly
+              />
+            </div>
+
+            <div className="space-y-1">
+              <label className="text-sm text-gray-400">รหัสแผนงาน</label>
+              <input
+                className="w-full bg-white/5 border border-white/10 text-white rounded-xl p-2.5 cursor-not-allowed "
+                value={form.deptcode}
+                readOnly
+              />
+            </div>
           </div>
-        </div>
 
-        {/* right */}
-        <div className="w-2/4">
-          <div className="bg-gray-100 p-4 rounded-md border shadow-md space-y-4">
-            <h1 className="text-xl font-bold">สรุปรายการที่ขอเบิก</h1>
-            {/* itemlist */}
-            {products?.map((item, index) => (
-              <div key={index} value={index}>
-                <div className="flex justify-between items-end">
+          {/* Right - รายการสินค้า */}
+          <div className="bg-white/10 backdrop-blur-sm border border-white/10 rounded-2xl p-5 shadow-lg">
+            <div className="flex items-center gap-2 mb-4">
+              <Package className="w-5 h-5 text-green-400" />
+              <h2 className="text-lg font-bold text-white">
+                รายการที่ขอเบิก ({products.length} รายการ)
+              </h2>
+            </div>
+
+            {/* Item List */}
+            <div className="space-y-3 max-h-[400px] overflow-y-auto hide-scrollbar pr-1">
+              {products?.map((item, index) => (
+                <div
+                  key={index}
+                  className="bg-white/5 border border-white/10 rounded-xl p-3 flex justify-between items-center hover:bg-white/10 transition-colors"
+                >
                   <div>
-                    <p className="text-md font-bold text-blue-500">
-                      {item.product.title}
-                    </p>
-
-                    {/* <p>จำนวน: {item.count} x {item.product.price}</p> */}
+                    <p className="font-bold text-white">{item.product.title}</p>
                   </div>
-
-                  <div>
-                    <p className="text-md">
-                      จำนวน:{" "}
-                      <a className="text-red-500 font-bold">{item.count}</a>
-                    </p>
-                    {/* <p className="text-red-500 font-bold">200</p> */}
-                    {/* <p className="text-red-500 font-bold"> {item.count * item.product.price}</p> */}
+                  <div className="bg-blue-500/20 text-blue-400 px-3 py-1 rounded-lg font-bold text-sm whitespace-nowrap">
+                    {item.count} ชิ้น
                   </div>
                 </div>
-              </div>
-            ))}
-            {/* 
-            <hr />
-            <div>
-              <div className="flex justify-between">
-                <p>ค่าจัดส่ง</p>
-                <p>0.00</p>
-              </div>
-              <div className="flex justify-between">
-                <p>ส่วนลด</p>
-                <p>0.00</p>
-              </div>
-            </div> */}
+              ))}
+            </div>
 
-            {/* ยอดรวม */}
-            {/* <hr />
-            <div>
-              <div className="flex justify-between">
-                <p className="font-bold">ยอดรวมสุทธิ:</p>
-                <p className="text-red-500 font-bold text-lg">{cartTotal}</p>
-              </div>
-            </div> */}
-
-            <div>
+            {/* Confirm Button */}
+            <div className="mt-5">
               <button
                 onClick={handleGoToPrint}
-                className=" bg-green-600 w-full p-2 rounded-md shadow-md text-white hover:bg-green-700"
+                className="bg-green-600 w-full rounded-xl text-white py-2.5 font-medium hover:bg-green-700 transition-colors shadow-md hover:shadow-lg"
               >
                 ยืนยันการเบิก
               </button>
@@ -220,4 +176,3 @@ const SummaryCard = () => {
 };
 
 export default SummaryCard;
-

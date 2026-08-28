@@ -78,14 +78,14 @@ const Uploadfile = ({ form, setForm }) => {
 
   return (
     <div className="my-4">
-      <div className="flex mx-4 gap-4 my-4">
+      <div className="flex flex-wrap mx-4 gap-3 sm:gap-4 my-4">
         {isLoading && (
           <LoaderCircle className="w-10 h-10 animate-spin text-gray-800 justify-center" />
         )}
         {form.images.map((item, index) => (
           <div className="relative" key={index}>
             <img
-              className="w-64 h-40 hover:scale-105 rounded-lg"
+              className="w-32 h-24 sm:w-48 sm:h-32 md:w-64 md:h-40 hover:scale-105 rounded-lg object-cover"
               src={item.url}
             />
             <span

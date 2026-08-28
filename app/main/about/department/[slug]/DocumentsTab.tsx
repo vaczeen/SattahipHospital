@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { startTransition, useState, useTransition } from "react";
 import {
   Lock,
   Unlock,
@@ -19,12 +19,14 @@ import { format } from "date-fns";
 import { th } from "date-fns/locale";
 
 interface DocumentsTabProps {
-  department: DepartmentItem;
+  slug: string;
+  label: string;
   initialDocuments: any[];
 }
 
-export default function DocumentsTab({
-  department,
+export default  function DocumentsTab({
+  slug,
+  label,
   initialDocuments,
 }: DocumentsTabProps) {
   const [documents, setDocuments] = useState(initialDocuments);
@@ -33,13 +35,27 @@ export default function DocumentsTab({
   const [isUnlocked, setIsUnlocked] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isDeleting, setIsDeleting] = useState<number | null>(null);
-
+  const [unlockError, setUnlockError] = useState("");
+  const [isPending, startTransition] = useTransition();
   const handleUnlock = () => {
-    if (password === department.uploadPassword) {
-      setIsUnlocked(true);
-    } else {
-      alert("รหัสผ่านไม่ถูกต้อง");
-    }
+    setUnlockError("");
+    const formData = new FormData();
+    formData.append("departmentId", slug);
+    formData.append("password", password);
+    formData.append("title", "test"); // dummy เพื่อเช็ค password
+    formData.append("file", new File([], "test")); // dummy file
+
+    startTransition(async () => {
+      const result = await uploadDepartmentDocument(formData);
+
+      // ถ้า error เป็นเรื่อง password ให้แสดง error
+      // ถ้าผ่าน password แต่ error อื่น (เช่น file ว่าง) แปลว่า password ถูก
+      if (result.error === "รหัสผ่านไม่ถูกต้อง") {
+        setUnlockError("รหัสผ่านไม่ถูกต้อง");
+      } else {
+        setIsUnlocked(true);
+      }
+    });
   };
 
   const handleUpload = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -47,7 +63,7 @@ export default function DocumentsTab({
     setIsSubmitting(true);
 
     const formData = new FormData(e.currentTarget);
-    formData.append("departmentId", department.slug);
+    formData.append("departmentId", slug);
     formData.append("password", password);
 
     try {
@@ -70,11 +86,7 @@ export default function DocumentsTab({
 
     setIsDeleting(id);
     try {
-      const result = await deleteDepartmentDocument(
-        id,
-        fileUrl,
-        department.slug,
-      );
+      const result = await deleteDepartmentDocument(id, fileUrl, slug);
       if (result.success) {
         setDocuments((docs) => docs.filter((d) => d.id !== id));
       } else {
@@ -115,7 +127,7 @@ export default function DocumentsTab({
               ใส่รหัสผ่านเพื่อแนบเอกสาร
             </h4>
             <p className="text-xs text-slate-500">
-              เฉพาะเจ้าหน้าที่ของกลุ่มงาน {department.label}
+              เฉพาะเจ้าหน้าที่ของกลุ่มงาน {label}
             </p>
           </div>
           <div className="flex gap-2">
@@ -129,11 +141,13 @@ export default function DocumentsTab({
             />
             <button
               onClick={handleUnlock}
+              disabled={isPending}
               className="bg-primary text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-primary/90 transition-colors"
             >
-              ตกลง
+              {isPending ? "กำลังตรวจสอบ..." : "ตกลง"}
             </button>
           </div>
+          {unlockError && <p className="text-red-500 text-xs">{unlockError}</p>}
         </div>
       )}
 

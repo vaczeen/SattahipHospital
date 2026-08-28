@@ -65,23 +65,23 @@ const FormEditProduct = () => {
   };
 
   return (
-    <div className="container mx-auto p-6 ">
+    <div className="container mx-auto p-3 sm:p-4 md:p-6">
       <form onSubmit={handleSubmit}>
-        <div className="bg-gray-800 shadow-md rounded-xl p-4">
-          <div className="flex items-center justify-between mb-2">
-            <h2 className="text-2xl font-semibold  flex items-center gap-2 text-white">
-              <PackageSearch className="w-8 h-8 text-blue-600" />
+        <div className="bg-gray-800 shadow-md rounded-xl p-3 sm:p-4">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-2 gap-3">
+            <h2 className="text-xl sm:text-2xl font-semibold flex items-center gap-2 text-white">
+              <PackageSearch className="w-6 h-6 sm:w-8 sm:h-8 text-blue-600" />
               Edit Product
             </h2>
           </div>
           <br />
 
           <div className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-end bg-gray-700 p-4 rounded-lg relative">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-3 sm:gap-4 items-end bg-gray-700 p-3 sm:p-4 rounded-lg relative">
               <div className="md:col-span-4 flex flex-col space-y-1">
                 <span className="px-1 font-bold text-gray-400">Title</span>
                 <input
-                  className="bg-gray-600 border border-gray-700 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5"
+                  className="bg-gray-200  border border-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5"
                   value={form.title}
                   onChange={handleOnchange}
                   placeholder="Title"
@@ -94,7 +94,7 @@ const FormEditProduct = () => {
                   Description
                 </span>
                 <input
-                  className="bg-gray-600 border border-gray-700 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5"
+                  className="bg-gray-200  border border-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5"
                   value={form.description}
                   onChange={handleOnchange}
                   placeholder="Description"
@@ -106,7 +106,7 @@ const FormEditProduct = () => {
                 <span className="px-1 font-bold text-gray-400">Unit</span>
                 <input
                   type="text"
-                  className="bg-gray-600 border border-gray-700 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5"
+                  className="bg-gray-200  border border-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5"
                   value={form.unit}
                   onChange={handleOnchange}
                   placeholder="หน่วย"
@@ -118,7 +118,7 @@ const FormEditProduct = () => {
                 <span className="px-1 font-bold text-gray-400">Quantity</span>
                 <input
                   type="number"
-                  className="bg-gray-600 border border-gray-700 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5"
+                  className="bg-gray-200  border border-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5"
                   value={form.quantity}
                   onChange={handleOnchange}
                   placeholder="Quantity"
@@ -129,7 +129,7 @@ const FormEditProduct = () => {
               <div className="md:col-span-2 flex flex-col space-y-1">
                 <span className="px-1 font-bold text-gray-400 ">Filter</span>
                 <select
-                  className="bg-gray-600 border border-gray-700 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5"
+                  className="bg-gray-200  border border-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5"
                   name="categoryId"
                   onChange={handleOnchange}
                   required
@@ -152,7 +152,10 @@ const FormEditProduct = () => {
             {/* upload file img */}
             <Uploadfile form={form} setForm={setForm} />
           </div>
-          <div className="flex justify-end pt-4 border-t border-gray-400 mt-2">
+          <div
+            onClick={() => router.push("/inventory/admin/product")}
+            className="flex justify-end pt-4 border-t border-gray-400 mt-2"
+          >
             <button className="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2.5 px-8 rounded-lg transition-colors flex items-center justify-center gap-2 shadow-md hover:shadow-lg">
               <Pencil className="w-5 h-5" />
               แก้ไขพัสดุ

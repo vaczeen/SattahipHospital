@@ -9,7 +9,7 @@ export default function PublicInventoryLayout({
   return (
     <div>
       <Navbar />
-      <main className="h-full px-4 mt-2 mx-auto">
+      <main className="min-h-screen px-2 sm:px-4 mx-auto bg-gradient-to-b from-gray-400 to-gray-300 p-3 sm:p-6 shadow-2xl border border-gray-500">
         {children}
       </main>
     </div>

@@ -15,7 +15,7 @@ const PrintOrder = ({ order }) => {
       <br />
 
       <h1 className=" text-center ">
-        ใบเบิกพัสดุ โรงพยาบาลสัตหีบ กม.10
+        ใบเบิกพัสดุ โรงพยาบาลสัตหีบ
       </h1>
       <p className=" text-center ">
         วันที่ {new Date(order.createdAt).getDate()} เดือน {new Date(order.createdAt).toLocaleDateString("th-TH", { month: "long" })} พ.ศ. {new Date(order.createdAt).getFullYear() + 543}
@@ -23,7 +23,7 @@ const PrintOrder = ({ order }) => {
 
       <div className="mb-4">
         <p >จากฝ่าย/งาน {order.office} {order.dept} รหัสแผนงาน 10825-2613-{order.deptcode}</p>
-        <p>ถึง หัวหน้าเจ้าหน้าที่ โรงพยาบาลสัตหีบ กม.10</p>
+        <p>ถึง หัวหน้าเจ้าหน้าที่ โรงพยาบาลสัตหีบ</p>
         <p className="px-6 ">ข้าพเจ้าขอเบิกพัสดุตามรายการข้างท้ายนี้เพื่อใช้ในงานราชการและต้องการใช้สิ่งของตามใบแนบนี้เพื่อใช้</p>
         <p >ในราชการเท่านั้น</p>
       </div>

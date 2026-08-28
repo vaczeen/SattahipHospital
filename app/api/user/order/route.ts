@@ -1,12 +1,16 @@
-import { NextRequest, NextResponse } from 'next/server';
-import prisma from '@/lib/prisma';
-import { authCheck } from '@/lib/inventory-utils/auth';
+import { NextRequest, NextResponse } from "next/server";
+import prisma from "@/lib/prisma";
+import { authCheck } from "@/lib/inventory-utils/auth";
+import { notifyPendingOrder } from "@/lib/orderNotify";
 
 export async function POST(req: NextRequest) {
   try {
     const authResult = await authCheck(req);
     if (authResult.error) {
-      return NextResponse.json({ message: authResult.error }, { status: authResult.status });
+      return NextResponse.json(
+        { message: authResult.error },
+        { status: authResult.status },
+      );
     }
     const { user: decodedUser } = authResult;
 
@@ -21,7 +25,10 @@ export async function POST(req: NextRequest) {
 
     // check cart empty
     if (!userCart || userCart.products.length === 0) {
-      return NextResponse.json({ ok: false, message: 'Cart is Empty' }, { status: 400 });
+      return NextResponse.json(
+        { ok: false, message: "Cart is Empty" },
+        { status: 400 },
+      );
     }
 
     // create new order
@@ -44,6 +51,10 @@ export async function POST(req: NextRequest) {
       },
     });
 
+    if (order.orderStatus === "Pending") {
+      await notifyPendingOrder(order.id);
+    }
+
     // update product
     const update = userCart.products.map((item) => ({
       where: {
@@ -65,12 +76,13 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({
       ok: true,
-      message: 'ขอเบิกพัสดุสำเร็จ กรุณาพิมพ์ใบเบิกพัสดุด้านล่าง และนำไปให้เจ้าหน้าที่ IT',
+      message:
+        "ขอเบิกพัสดุสำเร็จ กรุณาพิมพ์ใบเบิกพัสดุด้านล่าง และนำไปให้เจ้าหน้าที่ IT",
       order,
     });
   } catch (error) {
     console.log(error);
-    return NextResponse.json({ message: 'server error' }, { status: 500 });
+    return NextResponse.json({ message: "server error" }, { status: 500 });
   }
 }
 
@@ -78,7 +90,10 @@ export async function GET(req: NextRequest) {
   try {
     const authResult = await authCheck(req);
     if (authResult.error) {
-      return NextResponse.json({ message: authResult.error }, { status: authResult.status });
+      return NextResponse.json(
+        { message: authResult.error },
+        { status: authResult.status },
+      );
     }
     const { user: decodedUser } = authResult;
 
@@ -94,12 +109,15 @@ export async function GET(req: NextRequest) {
     });
 
     if (orders.length === 0) {
-      return NextResponse.json({ ok: false, message: 'No Orders' }, { status: 400 });
+      return NextResponse.json(
+        { ok: false, message: "No Orders" },
+        { status: 400 },
+      );
     }
 
     return NextResponse.json({ ok: true, orders });
   } catch (error) {
     console.log(error);
-    return NextResponse.json({ message: 'server error' }, { status: 500 });
+    return NextResponse.json({ message: "server error" }, { status: 500 });
   }
 }

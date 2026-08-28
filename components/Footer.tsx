@@ -41,17 +41,14 @@ export function Footer() {
             </ul>
           </div>
         </div>
-        <div className="border-t border-white/10 mt-10 pt-6 flex justify-between items-center text-sm opacity-60">
-          <p>© 2026 Sattahip Hospital At Rights Reserved by IT Department</p>
+        <div className="border-t border-white/10 mt-10 pt-6 flex flex-col sm:flex-row justify-between items-center gap-4 text-sm opacity-60">
+          <p className="text-center sm:text-left">© 2026 Sattahip Hospital At Rights Reserved by IT Department</p>
           <div className="flex gap-4">
-            {/* Social Icons would go here */}
-            {/* <span>LinkedIn</span> */}
             <span>
               <Link href="https://www.facebook.com/sattahipkm10hospital">
                 Facebook
               </Link>
             </span>
-            {/* <span>Instagram</span> */}
           </div>
         </div>
       </div>

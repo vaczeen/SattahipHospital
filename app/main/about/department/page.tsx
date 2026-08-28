@@ -1,11 +1,23 @@
 import React from "react";
+import prisma from "@/lib/prisma";
 import Link from "next/link";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { ChevronLeft } from "lucide-react";
 import { departmentsData } from "@/lib/departmentsData";
 
-export default function department() {
+export default async function department() {
+  const deptConfigs = await prisma.departmentConfig.findMany();
+
+  const departments = departmentsData.map((style) => {
+    const config = deptConfigs.find((c) => c.slug === style.slug);
+    return {
+      ...style,
+      label: config?.label ?? style.slug,
+      description: config?.description ?? "",
+    };
+  });
+  
   return (
     <div className="container mx-auto px-4 py-12">
       <Link
@@ -20,7 +32,7 @@ export default function department() {
         หน่วยงานต่างๆ
       </h1>
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-        {departmentsData.map((item, index) => {
+        {departments.map((item, index) => {
           const CardContent = () => (
             <>
               {/* Background Gradient Effect on Hover */}
@@ -78,7 +90,7 @@ export default function department() {
           const cardClasses =
             "group relative flex flex-col items-center justify-center p-6 bg-background border rounded-2xl shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer overflow-hidden";
 
-          const href = item.href || `/main/about/department/${item.slug}`;
+          const href = `/main/about/department/${item.slug}`;
 
           return (
             <Link

@@ -1,7 +1,8 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import useEcomStore from "@/store/ecom-store";
+import { listProduct } from "@/lib/inventory-api/Product";
 import {
   createReceiveRecord,
   listReceiveHistory,
@@ -18,13 +19,138 @@ import {
   Printer,
   CheckSquare,
   Square,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import PrintReceive from "@/app/api/card/PrintReceive";
+
+// Combobox ที่พิมพ์ค้นหาได้ โดยดึงรายชื่อสินค้าจากตาราง Product (field title)
+const ProductTitleSelect = ({ value, onChange, onSelect, products }) => {
+  const [open, setOpen] = useState(false);
+  const [highlight, setHighlight] = useState(0);
+  const containerRef = useRef(null);
+
+  // กรองสินค้าตามคำที่พิมพ์ (ไม่แยกตัวพิมพ์เล็กใหญ่)
+  const filtered = useMemo(() => {
+    const q = (value || "").trim().toLowerCase();
+    const list = q
+      ? products.filter((p) =>
+          (p.title || "").toLowerCase().includes(q),
+        )
+      : products;
+    return list.slice(0, 50);
+  }, [products, value]);
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (containerRef.current && !containerRef.current.contains(e.target)) {
+        setOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const handleKeyDown = (e) => {
+    if (!open && e.key === "ArrowDown") {
+      setOpen(true);
+      setHighlight(0);
+      return;
+    }
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      setHighlight((h) => Math.min(h + 1, filtered.length - 1));
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      setHighlight((h) => Math.max(h - 1, 0));
+    } else if (e.key === "Enter") {
+      if (open && filtered[highlight]) {
+        e.preventDefault();
+        onSelect(filtered[highlight]);
+      }
+    } else if (e.key === "Escape") {
+      setOpen(false);
+    }
+  };
+
+  return (
+    <div ref={containerRef} className="relative">
+      <input
+        type="text"
+        name="productName"
+        value={value}
+        onChange={(e) => {
+          onChange(e);
+          setOpen(true);
+          setHighlight(0);
+        }}
+        onFocus={() => setOpen(true)}
+        onKeyDown={handleKeyDown}
+        placeholder="พิมพ์เพื่อค้นหาหรือกรอกชื่อพัสดุ"
+        className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none bg-gray-200"
+      />
+      {open && filtered.length > 0 && (
+        <ul className="absolute z-20 w-full mt-1 bg-white border rounded-lg shadow-lg max-h-60 overflow-y-auto">
+          {filtered.map((p, i) => (
+            <li key={p.id}>
+              <button
+                type="button"
+                onMouseDown={(e) => {
+                  e.preventDefault();
+                  onSelect(p);
+                }}
+                onMouseEnter={() => setHighlight(i)}
+                className={`w-full text-left px-4 py-2 text-sm transition-colors ${
+                  i === highlight
+                    ? "bg-blue-500 text-white"
+                    : "text-gray-800 hover:bg-gray-100"
+                }`}
+              >
+                {p.title}
+                {p.unit && (
+                  <span
+                    className={`ml-1 text-xs ${
+                      i === highlight ? "text-blue-100" : "text-gray-400"
+                    }`}
+                  >
+                    ({p.unit})
+                  </span>
+                )}
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+      {open && filtered.length === 0 && (
+        <ul className="absolute z-20 w-full mt-1 bg-white border rounded-lg shadow-lg">
+          <li className="px-4 py-2 text-sm text-gray-400">ไม่พบรายการสินค้า</li>
+        </ul>
+      )}
+    </div>
+  );
+};
+
+const PAGE_SIZE = 20;
 
 const RecieveProduct = () => {
   const token = useEcomStore((state) => state.token);
   const [history, setHistory] = useState([]);
+  const [products, setProducts] = useState([]);
   const [selectedItems, setSelectedItems] = useState([]);
+  const [page, setPage] = useState(1);
+
+  const totalPages = Math.max(1, Math.ceil(history.length / PAGE_SIZE));
+  const paginatedHistory = history.slice(
+    (page - 1) * PAGE_SIZE,
+    page * PAGE_SIZE,
+  );
+
+  // ถ้าหน้าปัจจุบันเกินจำนวนหน้าหลังจากลบข้อมูล ให้กลับไปหน้าที่ถูกต้อง
+  useEffect(() => {
+    if (page > totalPages) {
+      setPage(totalPages);
+    }
+  }, [page, totalPages]);
   const [formList, setFormList] = useState([
     {
       productName: "",
@@ -37,16 +163,41 @@ const RecieveProduct = () => {
 
   useEffect(() => {
     loadHistory(token);
+    loadProducts();
   }, []);
 
   const loadHistory = (token) => {
     listReceiveHistory(token)
       .then((res) => {
-        setHistory(res.data);
+        // เรียงจากวันที่ทำรายการ (updatedAt) ล่าสุดก่อน
+        const sorted = [...res.data].sort((a, b) => {
+          return new Date(b.updatedAt) - new Date(a.updatedAt);
+        });
+        setHistory(sorted);
       })
       .catch((err) => {
         console.log(err);
       });
+  };
+
+  const loadProducts = () => {
+    listProduct(1000)
+      .then((res) => {
+        setProducts(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  // เลือกสินค้าจาก dropdown: ใส่ชื่อ และเติมหน่วยนับ (unit) ให้อัตโนมัติ
+  const handleTitleSelect = (index, product) => {
+    const newFormList = [...formList];
+    newFormList[index].productName = product.title;
+    if (product.unit) {
+      newFormList[index].unit = product.unit;
+    }
+    setFormList(newFormList);
   };
 
   const handleChange = (index, e) => {
@@ -99,6 +250,7 @@ const RecieveProduct = () => {
             receiveDate: new Date().toISOString().split("T")[0],
           },
         ]);
+        setPage(1);
         loadHistory(token);
       })
       .catch((err) => {
@@ -155,19 +307,18 @@ const RecieveProduct = () => {
     <div className="container mx-auto p-6">
       {/* Header Section */}
       <div className="bg-gray-800 shadow-md rounded-xl p-4 ">
-        <div className="flex items-center justify-between  pb-4">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-4 gap-3">
           <div className="flex items-center gap-3">
-            <Package className="w-8 h-8 text-blue-600" />
-            <h2 className="text-2xl font-semibold  flex items-center gap-2 text-white">
+            <Package className="w-6 h-6 sm:w-8 sm:h-8 text-blue-600" />
+            <h2 className="text-xl sm:text-2xl font-semibold flex items-center gap-2 text-white">
               Revieve Products
             </h2>
           </div>
           <button
             onClick={handlePrint}
-            className="flex items-center gap-2 bg-gray-800 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors shadow-md"
+            className="flex items-center gap-2 bg-gray-800 text-white px-3 sm:px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors shadow-md text-sm"
           >
-            <Printer className="w-5 h-5" /> พิมพ์รายการที่เลือก (
-            {selectedItems.length})
+            <Printer className="w-4 h-4 sm:w-5 sm:h-5" /> พิมพ์ ({selectedItems.length})
           </button>
         </div>
 
@@ -199,13 +350,11 @@ const RecieveProduct = () => {
                   <label className="text-xs font-medium text-white ">
                     Title
                   </label>
-                  <input
-                    type="text"
-                    name="productName"
+                  <ProductTitleSelect
                     value={form.productName}
                     onChange={(e) => handleChange(index, e)}
-                    placeholder="กรอกชื่อพัสดุ"
-                    className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none bg-gray-200"
+                    onSelect={(product) => handleTitleSelect(index, product)}
+                    products={products}
                   />
                 </div>
                 <div className="md:col-span-2 flex flex-col space-y-1">
@@ -323,7 +472,7 @@ const RecieveProduct = () => {
             </thead>
             <tbody className="divide-y divide-gray-100">
               {history.length > 0 ? (
-                history.map((item, index) => {
+                paginatedHistory.map((item, index) => {
                   const isSelected = selectedItems.some(
                     (i) => i.id === item.id,
                   );
@@ -341,7 +490,7 @@ const RecieveProduct = () => {
                         />
                       </td>
                       <td className="px-6 py-4 text-sm text-white">
-                        {index + 1}
+                        {(page - 1) * PAGE_SIZE + index + 1}
                       </td>
                       <td className="px-6 py-4 text-sm font-medium text-white">
                         {item.productName}
@@ -382,6 +531,88 @@ const RecieveProduct = () => {
             </tbody>
           </table>
         </div>
+
+        {/* Pagination */}
+        {history.length > 0 && (
+          <div className="px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-gray-700">
+            <span className="text-sm text-gray-400">
+              แสดง {(page - 1) * PAGE_SIZE + 1} -{" "}
+              {Math.min(page * PAGE_SIZE, history.length)} จาก{" "}
+              {history.length} รายการ
+            </span>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setPage((p) => Math.max(1, p - 1))}
+                disabled={page === 1}
+                className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-sm bg-gray-700 text-white hover:bg-gray-600 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+              >
+                <ChevronLeft className="w-4 h-4" />
+                ก่อนหน้า
+              </button>
+              <div className="flex items-center gap-1">
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                  (pageNum) => {
+                    // แสดงเฉพาะหน้าแรก, หน้าสุดท้าย และหน้ารอบๆ หน้าปัจจุบัน
+                    if (
+                      pageNum === 1 ||
+                      pageNum === totalPages ||
+                      Math.abs(pageNum - page) <= 1
+                    ) {
+                      return (
+                        <button
+                          key={pageNum}
+                          onClick={() => setPage(pageNum)}
+                          className={`w-9 h-9 rounded-lg text-sm font-medium transition-colors ${
+                            pageNum === page
+                              ? "bg-blue-600 text-white"
+                              : "bg-gray-700 text-gray-300 hover:bg-gray-600"
+                          }`}
+                        >
+                          {pageNum}
+                        </button>
+                      );
+                    }
+                    if (
+                      pageNum === 2 &&
+                      page > 3
+                    ) {
+                      return (
+                        <span
+                          key={pageNum}
+                          className="w-9 h-9 flex items-center justify-center text-sm text-gray-400"
+                        >
+                          ...
+                        </span>
+                      );
+                    }
+                    if (
+                      pageNum === totalPages - 1 &&
+                      page < totalPages - 2
+                    ) {
+                      return (
+                        <span
+                          key={pageNum}
+                          className="w-9 h-9 flex items-center justify-center text-sm text-gray-400"
+                        >
+                          ...
+                        </span>
+                      );
+                    }
+                    return null;
+                  },
+                )}
+              </div>
+              <button
+                onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                disabled={page === totalPages}
+                className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-sm bg-gray-700 text-white hover:bg-gray-600 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+              >
+                ถัดไป
+                <ChevronRight className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Hidden Print Component */}

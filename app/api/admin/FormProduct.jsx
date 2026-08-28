@@ -5,7 +5,14 @@ import { showToast } from "nextjs-toast-notify";
 import Uploadfile from "./Uploadfile";
 import Link from "next/link";
 
-import { Save, Trash2, Pencil, PackageSearch } from "lucide-react";
+import {
+  Save,
+  Trash2,
+  Pencil,
+  PackageSearch,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
 
 const initialState = {
   title: "",
@@ -23,6 +30,14 @@ const FormProduct = () => {
   const categories = useEcomStore((state) => state.categories);
   const getProduct = useEcomStore((state) => state.getProduct);
   const products = useEcomStore((state) => state.products);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+
+  const totalPages = Math.ceil(products.length / itemsPerPage);
+  const paginatedProducts = products.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage,
+  );
 
   const [form, setForm] = useState({
     title: "",
@@ -68,7 +83,7 @@ const FormProduct = () => {
 
   useEffect(() => {
     getCategory(token);
-    getProduct(20);
+    getProduct(100);
   }, []);
   console.log(categories);
 
@@ -76,19 +91,19 @@ const FormProduct = () => {
     <div className="container mx-auto p-6 ">
       <form onSubmit={handleSubmit}>
         <div className="bg-gray-800 shadow-md rounded-xl p-4 ">
-          <div className="flex items-center justify-between mb-2">
-            <h2 className="text-2xl font-semibold  flex items-center gap-2 text-white">
-              <PackageSearch  className="w-8 h-8 text-blue-600"/>
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-2 gap-3">
+            <h2 className="text-xl sm:text-2xl font-semibold flex items-center gap-2 text-white">
+              <PackageSearch className="w-6 h-6 sm:w-8 sm:h-8 text-blue-600" />
               Product List
             </h2>
           </div>
           <br />
           <div className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-end bg-gray-700 p-4 rounded-lg relative">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-3 sm:gap-4 items-end bg-gray-700 p-3 sm:p-4 rounded-lg relative">
               <div className="md:col-span-4 flex flex-col space-y-1">
                 <span className="px-1 font-bold text-gray-400">Title</span>
                 <input
-                  className="bg-gray-200 border border-gray-700  text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block  p-2.5"
+                  className="bg-gray-200 border border-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                   value={form.title}
                   onChange={handleOnchange}
                   placeholder="Title"
@@ -97,7 +112,9 @@ const FormProduct = () => {
               </div>
 
               <div className="md:col-span-2 flex flex-col space-y-1">
-                <span className="px-1 font-bold text-gray-400">Description</span>
+                <span className="px-1 font-bold text-gray-400">
+                  Description
+                </span>
                 <input
                   className="bg-gray-200 border border-gray-700  text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5"
                   value={form.description}
@@ -169,8 +186,8 @@ const FormProduct = () => {
         <hr />
 
         <div className="relative overflow-x-auto shadow-md sm:rounded-lg mt-2">
-          <table className="w-full text-sm text-left rtl:text-right text-gray-400">
-            <thead className="text-xs  uppercase bg-gray-700 text-gray-400">
+          <table className="w-full text-xs sm:text-sm text-left rtl:text-right text-gray-400">
+            <thead className="text-xs uppercase bg-gray-700 text-gray-400">
               <tr className="text-center">
                 <th scope="col" className="px-1 py-3">
                   Number
@@ -202,15 +219,16 @@ const FormProduct = () => {
               </tr>
             </thead>
             <tbody>
-              {products.map((item, index) => {
+              {paginatedProducts.map((item, index) => {
                 console.log(item);
+                
                 return (
                   <tr
                     className="border-b bg-gray-800 border-gray-700 hover:bg-gray-600"
-                    key={index}
+                    key={(currentPage - 1) * itemsPerPage + index}
                   >
                     <td className="px-10 py-4 font-semibold text-center text-white">
-                      {index + 1}
+                      {item.id}
                     </td>
                     <td className="p-4">
                       {item.images.length > 0 ? (
@@ -264,6 +282,56 @@ const FormProduct = () => {
               })}
             </tbody>
           </table>
+          {totalPages > 1 && (
+            <div className="flex items-center justify-between px-4 py-3 bg-gray-800 rounded-b-lg mt-0">
+              <span className="text-sm text-gray-400">
+                แสดง {(currentPage - 1) * itemsPerPage + 1} -{" "}
+                {Math.min(currentPage * itemsPerPage, products.length)} จาก{" "}
+                {products.length} รายการ
+              </span>
+
+              <div className="flex items-center gap-1">
+                {/* ปุ่มก่อนหน้า */}
+                <button
+                  onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                  disabled={currentPage === 1}
+                  className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-sm bg-gray-700 text-white hover:bg-gray-600 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                  ก่อนหน้า
+                </button>
+
+                {/* ปุ่มเลขหน้า */}
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                  (page) => (
+                    <button
+                      key={page}
+                      onClick={() => setCurrentPage(page)}
+                      className={`w-9 h-9 rounded-lg text-sm font-medium transition-colors ${
+                        currentPage === page
+                          ? "bg-blue-600 text-white"
+                          : "bg-gray-700 text-gray-300 hover:bg-gray-600"
+                      }`}
+                    >
+                      {page}
+                    </button>
+                  ),
+                )}
+
+                {/* ปุ่มถัดไป */}
+                <button
+                  onClick={() =>
+                    setCurrentPage((p) => Math.min(totalPages, p + 1))
+                  }
+                  disabled={currentPage === totalPages}
+                  className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-sm bg-gray-700 text-white hover:bg-gray-600 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                >
+                  ถัดไป
+                  <ChevronRight className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </form>
     </div>

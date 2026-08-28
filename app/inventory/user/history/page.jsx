@@ -4,7 +4,7 @@ import HistoryCard from "@/app/api/card/HistoryCard";
 
 const history = () => {
   return (
-    <div>
+    <div className="min-h-screen bg-gradient-to-b from-gray-400 to-gray-300">
       <HistoryCard />
     </div>
   );

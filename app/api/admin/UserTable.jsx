@@ -60,16 +60,16 @@ const UserTable = () => {
 
   return (
     <div className="bg-gray-800 shadow-md rounded-xl p-4">
-      <div className="flex items-center justify-between  pb-4">
+      <div className="flex items-center justify-between pb-4">
         <div className="flex items-center gap-3">
-          <h2 className="text-2xl font-semibold  flex items-center gap-2 text-white">
-           <UserCog className="w-8 h-8 text-blue-600" /> Manage Users
+          <h2 className="text-xl sm:text-2xl font-semibold flex items-center gap-2 text-white">
+           <UserCog className="w-6 h-6 sm:w-8 sm:h-8 text-blue-600" /> Manage Users
           </h2>
         </div>
       </div>
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-        <table className="w-full text-sm text-left rtl:text-right text-gray-400 dark:text-gray-400">
-          <thead className="text-xs text-gray-400  dark:text-gray-400 uppercase bg-gray-700 dark:bg-gray-700 ">
+        <table className="w-full text-xs sm:text-sm text-left rtl:text-right text-gray-400">
+          <thead className="text-xs text-gray-400 uppercase bg-gray-700">
             <tr className="text-center">
               <th
                 scope="col"

@@ -102,8 +102,12 @@ const OrderTable = () => {
     getOrdersAdmin(token)
       .then((res) => {
         console.log(res);
-        setOrders(res.data);
-        setFilteredOrders(res.data);
+        // เรียง order จากล่าสุดขึ้นมาข้างบนก่อน
+        const sorted = [...res.data].sort(
+          (a, b) => new Date(b.createdAt) - new Date(a.createdAt),
+        );
+        setOrders(sorted);
+        setFilteredOrders(sorted);
       })
       .catch((err) => {
         console.log(err);
@@ -208,22 +212,22 @@ const OrderTable = () => {
     <div className="container mx-auto p-4 ">
       {/* Filter Bar */}
       <div className="bg-gray-800 shadow-md rounded-xl p-4">
-        <div className="flex items-center justify-between mb-2">
-          <h2 className="text-2xl font-semibold  flex items-center gap-2 text-white">
-            <PackageSearch className="w-8 h-8 text-blue-600" />
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-2 gap-3">
+          <h2 className="text-xl sm:text-2xl font-semibold flex items-center gap-2 text-white">
+            <PackageSearch className="w-6 h-6 sm:w-8 sm:h-8 text-blue-600" />
             Product List
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-2 rounded-lg relative">
+          <div className="flex gap-2 w-full sm:w-auto">
             <button
               onClick={handleResetFilters}
-              className="flex items-center gap-2 bg-gray-100 text-gray-700 px-4 py-2.5 rounded-lg hover:bg-gray-200 transition-all shadow-md"
+              className="flex items-center gap-2 bg-gray-100 text-gray-700 px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg hover:bg-gray-200 transition-all shadow-md text-sm"
             >
               <RotateCcw size={16} />
               Reset
             </button>
             <button
               onClick={handleExportExcel}
-              className="flex items-center gap-2 bg-green-600 text-white px-4 py-2.5 rounded-lg hover:bg-green-700 transition-all shadow-md"
+              className="flex items-center gap-2 bg-green-600 text-white px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg hover:bg-green-700 transition-all shadow-md text-sm"
             >
               Export to Excel
             </button>
@@ -232,7 +236,7 @@ const OrderTable = () => {
 
         <br />
 
-        <div className="grid grid-cols-1 md:grid-cols-14 gap-2 items-end bg-gray-700 p-4 rounded-lg relative">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-7 xl:grid-cols-14 gap-2 items-end bg-gray-700 p-3 sm:p-4 rounded-lg relative">
           <div className="md:col-span-2 flex flex-col space-y-1">
             <label className="text-sm font-medium text-gray-400 mb-1">
               User
@@ -349,10 +353,9 @@ const OrderTable = () => {
         </div>
       </div>
 
-      {/* table */}
-      <div className="relative overflow-x-auto shadow-md sm:rounded-lg mt-2">
-        <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-500">
-          <thead className="text-xs uppercase bg-gray-700 text-gray-400 dark:bg-gray-700 dark:text-gray-400">
+      {/* table */}        <div className="relative overflow-x-auto shadow-md sm:rounded-lg mt-2">
+        <table className="w-full text-xs sm:text-sm text-left rtl:text-right text-gray-500">
+          <thead className="text-xs uppercase bg-gray-700 text-gray-400">
             <tr className="text-center">
               <th className="px-3 py-3 text-left text-xs font-medium  uppercase tracking-wider">
                 Order ID

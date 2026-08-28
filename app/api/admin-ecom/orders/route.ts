@@ -1,12 +1,15 @@
-import { NextRequest, NextResponse } from 'next/server';
-import prisma from '@/lib/prisma';
-import { authCheck } from '@/lib/inventory-utils/auth';
+import { NextRequest, NextResponse } from "next/server";
+import prisma from "@/lib/prisma";
+import { authCheck } from "@/lib/inventory-utils/auth";
 
 export async function GET(req: NextRequest) {
   try {
     const authResult = await authCheck(req);
     if (authResult.error) {
-      return NextResponse.json({ message: authResult.error }, { status: authResult.status });
+      return NextResponse.json(
+        { message: authResult.error },
+        { status: authResult.status },
+      );
     }
 
     const orders = await prisma.order.findMany({
@@ -29,6 +32,6 @@ export async function GET(req: NextRequest) {
     return NextResponse.json(orders);
   } catch (error) {
     console.log(error);
-    return NextResponse.json({ message: 'Server Error' }, { status: 500 });
+    return NextResponse.json({ message: "Server Error" }, { status: 500 });
   }
 }

@@ -5,20 +5,21 @@ import { getDepartmentDocuments } from "@/lib/department-actions";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
+import prisma from "@/lib/prisma";
 import DepartmentContent from "./DepartmentContent";
 
-export default async function DepartmentDetailPage({
-  params,
-}: {
-  params: { slug: string };
-}) {
-  const department = departmentsData.find((d) => d.slug === params.slug);
+export default async function DepartmentDetailPage({params}) {
+  // ← ดึง style จาก file
+  const deptStyle = departmentsData.find((d) => d.slug === params.slug);
 
-  if (!department) {
-    notFound();
-  }
+  // ← ดึง label/description จาก DB
+  const deptConfig = await prisma.departmentConfig.findUnique({
+    where: { slug: params.slug },
+  });
 
-  const documents = await getDepartmentDocuments(department.slug);
+  if (!deptStyle || !deptConfig) notFound();
+
+  const documents = await getDepartmentDocuments(params.slug);
 
   return (
     <div className="min-h-screen bg-slate-50/50">
@@ -26,7 +27,7 @@ export default async function DepartmentDetailPage({
       <div
         className={cn(
           "w-full py-12 md:py-20 bg-gradient-to-br transition-all duration-700",
-          department.bgGradient,
+          deptStyle.bgGradient,
         )}
       >
         <div className="container mx-auto px-4">
@@ -42,11 +43,11 @@ export default async function DepartmentDetailPage({
             <div
               className={cn(
                 "p-6 rounded-[2.5rem] bg-white/90 shadow-xl shadow-slate-200/50 flex items-center justify-center transition-transform hover:scale-105 duration-500",
-                department.color,
+                deptStyle.color,
               )}
             >
-              {department.icon && (
-                <department.icon
+              {deptStyle.icon && (
+                <deptStyle.icon
                   className="w-16 h-16 md:w-20 md:h-20"
                   strokeWidth={1.2}
                 />
@@ -54,11 +55,11 @@ export default async function DepartmentDetailPage({
             </div>
             <div className="text-center md:text-left">
               <h1 className="text-3xl md:text-5xl font-bold text-slate-900 mb-2 tracking-tight">
-                {department.label}
+                {deptConfig.label}
               </h1>
               <p className="text-slate-600 max-w-2xl text-lg font-medium opacity-80">
-                {department.description ||
-                  `ข้อมูลและเอกสารต่างๆ ของ${department.label} โรงพยาบาลสัตหีบ`}
+                {deptConfig.description ||
+                  `ข้อมูลและเอกสารต่างๆ ของ${deptConfig.label} โรงพยาบาลสัตหีบ`}
               </p>
             </div>
           </div>
@@ -68,8 +69,10 @@ export default async function DepartmentDetailPage({
       {/* Main Content Section */}
       <div className="container mx-auto px-4 -mt-10 pb-20">
         <DepartmentContent
-          slug={department.slug}
+          slug={params.slug}
           initialDocuments={documents}
+          label={deptConfig.label}
+          description={deptConfig.description ?? ""}
         />
       </div>
     </div>

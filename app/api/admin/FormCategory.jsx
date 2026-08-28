@@ -68,22 +68,22 @@ const FormCategory = () => {
           </h2>
         </div>
         <br />
-        <form className=" flex items-center gap-2" onSubmit={handleSubmit}>
+        <form className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2" onSubmit={handleSubmit}>
           <input
             onChange={(e) => setName(e.target.value)}
-            className="bg-gray-200 border border-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5"
+            className="bg-gray-200 border border-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 flex-1"
             type="text"
             placeholder="Enter Category Name"
           />{" "}
-          <button className="md:col-span-2 flex-col space-y-1 bg-cyan-600 hover:bg-cyan-700 text-white font-semibold py-2.5 px-8 rounded-lg transition-colors flex items-center justify-center gap-2 shadow-md hover:shadow-lg">
+          <button className="bg-cyan-600 hover:bg-cyan-700 text-white font-semibold py-2.5 px-8 rounded-lg transition-colors flex items-center justify-center gap-2 shadow-md hover:shadow-lg">
             Add Category
           </button>
         </form>
       </div>
 
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg mt-2">
-        <table className="w-full text-sm text-left rtl:text-right text-gray-400 dark:text-gray-400">
-          <thead className="text-xs text-gray-400 uppercase bg-gray-700 dark:bg-gray-700 dark:text-gray-400">
+        <table className="w-full text-xs sm:text-sm text-left rtl:text-right text-gray-400">
+          <thead className="text-xs text-gray-400 uppercase bg-gray-700">
             <tr className="text-center">
               <th className="px-3 py-3 text-left text-xs font-medium  uppercase tracking-wider">
                 Category ID
