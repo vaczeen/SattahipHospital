@@ -28,13 +28,21 @@ interface MenuItem {
   description: string;
   color: string;
   bgGradient: string;
- 
+
   href?: string;
   iconClassName?: string;
   imageClassName?: string;
 }
 
 const menuItems: MenuItem[] = [
+  {
+    icon: Scale,
+    label: "กฎระเบียบและข้อปฏิบัติ",
+    description: "กฎระเบียบและข้อปฏิบัติในโรงพยาบาล",
+    color: "text-yellow-600",
+    bgGradient: "from-yellow-50 to-yellow-100/50",
+    href: "/main/employee/Rules",
+  },
   {
     icon: FolderOpen,
     label: "เอกสาร",
@@ -59,28 +67,38 @@ const menuItems: MenuItem[] = [
     href: "/main/employee/TelNumber",
   },
   {
-    icon: Car,
-    label: "ขออนุญาตใช้รถส่วนกลาง",
-    description: "ขออนุญาตใช้รถส่วนกลาง",
-    color: "text-violet-600",
-    bgGradient: "from-violet-50 to-violet-100/50",
-    href: "http://10.0.1.10/CAR/index.php",
+    imageSrc: "/gtw.png",
+    label: "GTWBACKoffice",
+    description: "โปรแกรม BackOffice",
+    color: "text-black",
+    bgGradient: "from-slate-50 to-slate-100/50",
+    href: "https://10825.gtwoffice.com/",
+    iconClassName: "bg-white group-hover:bg-white",
   },
   {
-    icon: Wrench,
-    label: "ขออนุมัติซ่อมพัสดุ",
-    description: "ขออนุมัติซ่อมพัสดุ",
-    color: "text-orange-600",
-    bgGradient: "from-orange-50 to-orange-100/50",
+    imageSrc: "/smo.png",
+    label: "Smart Office",
+    description: "Smart Office",
+    color: "text-black",
+    bgGradient: "from-slate-50 to-slate-100/50",
+    href: "http://a.km10.org:8087/login?ReturnUrl=%2F",
+    iconClassName: "bg-gray-800 group-hover:bg-gray-900/80",
   },
-  {
-    icon: CreditCard,
-    label: "ระบบเงินเดือน",
-    description: "ตรวจสอบรายรับ",
-    color: "text-cyan-600",
-    bgGradient: "from-cyan-50 to-cyan-100/50",
-    href: "/main/employee/SalaryModule",
-  },
+  // {
+  //   icon: Wrench,
+  //   label: "ขออนุมัติซ่อมพัสดุ",
+  //   description: "ขออนุมัติซ่อมพัสดุ",
+  //   color: "text-orange-600",
+  //   bgGradient: "from-orange-50 to-orange-100/50",
+  // },
+  // {
+  //   icon: CreditCard,
+  //   label: "ระบบเงินเดือน",
+  //   description: "ตรวจสอบรายรับ",
+  //   color: "text-cyan-600",
+  //   bgGradient: "from-cyan-50 to-cyan-100/50",
+  //   href: "/main/employee/SalaryModule",
+  // },
   {
     icon: Receipt,
     label: "รายชื่อบริษัทรับเช็ค",
@@ -106,15 +124,6 @@ const menuItems: MenuItem[] = [
     bgGradient: "from-pink-50 to-pink-100/50",
   },
   {
-    imageSrc: "/smo.png",
-    label: "Smart Office",
-    description: "Smart Office",
-    color: "text-black",
-    bgGradient: "from-slate-50 to-slate-100/50",
-    href: "http://a.km10.org:8087/login?ReturnUrl=%2F",
-    iconClassName: "bg-gray-800 group-hover:bg-gray-900/80",
-  },
-  {
     imageSrc: "/Sahakorn.png",
     label: "สหกรณ์ออมทรัพย์สาธารณสุขชลบุรี จำกัด",
     description: "เข้าสู่ระบบสมาชิกออนไลน์",
@@ -124,14 +133,7 @@ const menuItems: MenuItem[] = [
     iconClassName: "bg-white group-hover:bg-white",
     imageClassName: "w-40 h-16",
   },
-  {
-    icon: Scale,
-    label: "กฎระเบียบและข้อปฏิบัติ",
-    description: "กฎระเบียบและข้อปฏิบัติในโรงพยาบาล",
-    color: "text-yellow-600",
-    bgGradient: "from-yellow-50 to-yellow-100/50",
-    href: "/main/employee/Rules",
-  },
+
   {
     icon: SunSnow,
     label: "Cool Chain",
@@ -251,10 +253,8 @@ export function EmployeeCard() {
                   "relative z-10 p-4 rounded-2xl bg-muted/30 group-hover:bg-white/60 group-hover:shadow-sm transition-all duration-300 mb-3",
                   item.color,
                   item.iconClassName,
-              
                 )}
               >
-             
                 {item.imageSrc ? (
                   <div className={cn("w-8 h-8 relative", item.imageClassName)}>
                     <Image
@@ -289,7 +289,6 @@ export function EmployeeCard() {
                   />
                 </div>
               )}
-                  
             </>
           );
 

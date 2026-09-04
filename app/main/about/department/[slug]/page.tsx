@@ -54,7 +54,7 @@ export default async function DepartmentDetailPage({params}) {
               )}
             </div>
             <div className="text-center md:text-left">
-              <h1 className="text-3xl md:text-5xl font-bold text-slate-900 mb-2 tracking-tight">
+              <h1 className="text-3xl md:text-5xl font-bold text-slate-900 mb-2 tracking-wide">
                 {deptConfig.label}
               </h1>
               <p className="text-slate-600 max-w-2xl text-lg font-medium opacity-80">

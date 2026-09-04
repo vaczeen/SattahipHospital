@@ -133,7 +133,7 @@ const OrderTable = () => {
       case "Processing":
         return "bg-blue-200 text-blue-500 font-medium";
       case "Shipped":
-        return "bg-green-200 text-green-500 font-medium";
+        return "bg-green-200 text-green-700 font-medium";
       case "Cancelled":
         return "bg-red-200 text-red-500 font-medium";
     }

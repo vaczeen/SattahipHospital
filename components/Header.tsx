@@ -10,12 +10,31 @@ export function Header() {
   const [mobileDropdown, setMobileDropdown] = useState<string | null>(null);
   const [showEmployeeLogin, setShowEmployeeLogin] = useState(false);
   const [employeeCode, setEmployeeCode] = useState("");
-  const [employeeToken, setEmployeeToken] = useState<string | null>(
-    typeof window !== "undefined"
-      ? localStorage.getItem("employee_token")
-      : null,
-  );
+  const [employeeToken, setEmployeeToken] = useState<string | null>(null);
+  const [isTokenChecked, setIsTokenChecked] = useState(false);
 
+  useEffect(() => {
+    const token = localStorage.getItem("employee_token");
+
+    if (token) {
+      try {
+        const payload = JSON.parse(atob(token.split(".")[1]));
+        const isExpired = payload.exp * 1000 < Date.now();
+
+        if (isExpired) {
+          localStorage.removeItem("employee_token");
+          setEmployeeToken(null);
+        } else {
+          setEmployeeToken(token);
+        }
+      } catch {
+        localStorage.removeItem("employee_token");
+        setEmployeeToken(null);
+      }
+    }
+
+    setIsTokenChecked(true);
+  }, []);
   useEffect(() => {
     const handleScroll = () => {
       setIsSticky(window.scrollY > 100);
@@ -77,10 +96,11 @@ export function Header() {
       name: "สำหรับเจ้าหน้าที่",
       href: "#",
       onClick: () => {
+        if (!isTokenChecked) return; // ← รอก่อนถ้ายังโหลดไม่เสร็จ
         if (employeeToken) {
-          window.location.href = "/main/employee"; // มี token แล้วไปเลย
+          window.location.href = "/main/employee";
         } else {
-          setShowEmployeeLogin(true); // ยังไม่มี token แสดง popup
+          setShowEmployeeLogin(true);
         }
       },
     },
@@ -109,18 +129,18 @@ export function Header() {
           <div className="hidden lg:flex gap-6 text-sm">
             <div>
               <span className="opacity-80">เบอร์ติดต่อ</span>
-              <p className="font-semibold">038245051</p>
+              <p className="font-semibold tracking-wide">038245051</p>
             </div>
             <div>
               <span className="opacity-80">ช่วงเวลาเปิดทำการ</span>
-              <p className="font-semibold">08:00 -16:00 ทุกวัน</p>
+              <p className="font-semibold tracking-wide">08:00 -16:00 ทุกวัน</p>
             </div>
             <div>
               <span className="opacity-80">ตำแหน่งที่ตั้ง</span>
-              <p className="font-semibold">
+              <p className="font-semibold tracking-wide">
                 331 ทางหลวงยุทธศาสตร์ สัตหีบ - พนมสารคาม
               </p>
-              <p className="font-semibold">
+              <p className="font-semibold tracking-wide">
                 ต.พลูตาหลวง 20180, อ.สัตหีบ, จ.ชลบุรี
               </p>
             </div>

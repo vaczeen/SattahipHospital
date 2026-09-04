@@ -5,12 +5,14 @@ import {
   FileText,
   Download,
   Calendar,
+  ChevronLeft,
   ChevronDown,
   ChevronUp,
   BookOpen,
   Scale,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 type RuleDoc = {
   id: number;
@@ -105,11 +107,18 @@ export default function Rules() {
     <div className="min-h-screen bg-gray-50/50">
       {/* Hero Header */}
       <div className="bg-gradient-to-r from-emerald-600 via-emerald/90 to-teal-800 text-white pt-16 pb-24 px-4">
+        <Link
+          href="/main/employee"
+          className="inline-flex px-32 items-center gap-2 text-xl font-medium text-white hover:text-gray-200 transition-colors mb-6 group "
+        >
+          <ChevronLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform " />{" "}
+          ก่อนหน้า
+        </Link>
         <div className="container mx-auto px-4 text-center">
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-white/10 mb-4">
             <Scale className="w-8 h-8 text-white" />
           </div>
-          <h1 className="text-4xl font-serif font-bold mb-3">
+          <h1 className="text-4xl  font-bold mb-3">
             กฎระเบียบและข้อปฏิบัติ
           </h1>
           <p className="text-primary-foreground/80 max-w-2xl mx-auto">

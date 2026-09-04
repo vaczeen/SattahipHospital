@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 import { HeartHandshake, ChevronLeft } from "lucide-react"; // Using Handshake as alternative to HeartHandshake if preferred, but user used HeartHandshake. Handshake is fine.
 
 export const metadata = {
-  title: "จัดซื้อจัดจ้าง | โรงพยาบาลสัตหีบ กม.10",
+  title: "จัดซื้อจัดจ้าง | โรงพยาบาลสัตหีบ",
   description: "ประกาศจัดซื้อจัดจ้าง และสรุปผลการจัดหาพัสดุ",
 };
 
@@ -43,8 +43,8 @@ export default async function ProcurementPage() {
               )}
             </div>
             <div className="text-center md:text-left">
-              <h1 className="text-4xl font-serif font-bold mb-4">
-                จัดซื้อจัดจ้าง
+              <h1 className="text-4xl font-bold mb-4">
+                ประกวดราคาจัดซื้อจัดจ้าง
               </h1>
               <p className="text-gray-950-foreground/80 max-w-2xl mx-auto">
                 ศูนย์รวมข้อมูลข่าวสารการจัดซื้อจัดจ้าง ประกาศ และราคากลาง

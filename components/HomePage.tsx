@@ -20,13 +20,34 @@ import { InformationCard } from "./InformationCard";
 const services = [
   {
     id: 1,
-    name: "จัดซื้อจัดจ้าง",
+    name: "ประกวดราคาจัดซื้อจัดจ้าง",
     description: "รายการประกาศจัดซื้อจัดจ้างและสรุปผลการจัดหาพัสดุ",
     href: "/main/procurement",
     icon: HeartHandshake,
     color: "bg-blue-50 text-blue-600 ",
     hoverColor: "group-hover:bg-blue-600 group-hover:text-white ",
-    text: "hover:text-blue-600"
+    text: "hover:text-blue-600",
+  },
+  {
+    id: 3,
+    name: "ประกาศนโยบายและแผนปฏิบัติการ",
+    description: "ประกาศนโยบายและแผนปฏิบัติการของกระทรวงสาธารณสุข",
+    href: "/main/policy",
+    icon: Info,
+    color: "bg-yellow-50 text-yellow-600",
+    hoverColor: "group-hover:bg-yellow-600 group-hover:text-white",
+    text: "hover:text-yellow-600",
+  },
+  {
+    id: 4,
+    name: "ข้อมูล ITA",
+    description:
+      "การประเมินคุณธรรมและความโปร่งใสในการดำเนินงานของหน่วยงานภาครัฐ",
+    href: "/main/ITA",
+    icon: Waypoints,
+    color: "bg-purple-50 text-purple-600",
+    hoverColor: "group-hover:bg-purple-600 group-hover:text-white",
+    text: "hover:text-purple-600",
   },
   {
     id: 2,
@@ -36,27 +57,7 @@ const services = [
     icon: Building2,
     color: "bg-emerald-50 text-emerald-600",
     hoverColor: "group-hover:bg-emerald-600 group-hover:text-white",
-    text: "hover:text-emerald-600"
-  },
-  {
-    id: 3,
-    name: "ประกาศและนโยบาย",
-    description: "ประกาศและนโยบายต่างๆจากกระทรวงสาธารณสุข",
-    href: "/main/policy",
-    icon: Info,
-    color: "bg-yellow-50 text-yellow-600",
-    hoverColor: "group-hover:bg-yellow-600 group-hover:text-white",
-    text: "hover:text-yellow-600"
-  },
-  {
-    id: 4,
-    name: "แผนปฏิบัติและแนวทาง",
-    description: "แผนปฏิบัติและแนวทางของโรงพยาบาลสัตหีบ",
-    href: "/main/externalAgencies",
-    icon: Waypoints,
-    color: "bg-purple-50 text-purple-600",
-    hoverColor: "group-hover:bg-purple-600 group-hover:text-white",
-    text: "hover:text-purple-600"
+    text: "hover:text-emerald-600",
   },
 ];
 
@@ -143,7 +144,9 @@ export function HomePage() {
           <span className="text-emerald-700 font-bold text-xl tracking-uppercase mb-2 block uppercase tracking-widest">
             ยินดีต้อนรับเข้าสู่ โรงพยาบาลสัตหีบ
           </span>
-          <h2 className="text-3xl font-serif font-bold text-gray-900">ข้อมูลข่าวสาร</h2>
+          <h2 className="text-3xl  font-bold text-gray-900">
+            ข้อมูลข่าวสาร
+          </h2>
         </div>
 
         <div className="flex justify-end mb-6">
@@ -227,7 +230,7 @@ export function HomePage() {
             </span>
             <div className="h-0.5 w-2/3 bg-emerald-700"></div>
           </div>
-          <h2 className="text-3xl font-serif font-bold text-emerald-700">
+          <h2 className="text-3xl font-bold text-emerald-700">
             ช่องทางการสื่อสารและข้อมูลสำคัญ
           </h2>
           <p className="mt-4 text-muted-foreground max-w-2xl mx-auto">
@@ -270,7 +273,12 @@ export function HomePage() {
                 >
                   <service.icon className="w-6 h-6" />
                 </div>
-                <h3 className={cn("font-bold text-lg text-gray-950  transition-colors mb-2",service.text)}>
+                <h3
+                  className={cn(
+                    "font-bold text-lg text-gray-950  transition-colors mb-2",
+                    service.text,
+                  )}
+                >
                   {service.name}
                 </h3>
                 <p className="text-sm text-muted-foreground line-clamp-2 leading-relaxed">

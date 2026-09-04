@@ -47,7 +47,7 @@ const HistoryCard = () => {
       case "Processing":
         return "bg-blue-200 text-blue-500 font-medium";
       case "Shipped":
-        return "bg-green-200 text-green-500 font-medium";
+        return "bg-green-200 text-green-700 font-medium";
       case "Cancelled":
         return "bg-red-200 text-red-500 font-medium";
     }
@@ -67,7 +67,7 @@ const HistoryCard = () => {
           <div className="bg-white/10 backdrop-blur-sm p-2.5 rounded-xl">
             <FileText className="w-6 h-6 text-white" />
           </div>
-          <h1 className="text-2xl font-bold text-white tracking-tight">
+          <h1 className="text-2xl font-bold text-white tracking-wide">
             ประวัติการเบิก
           </h1>
         </div>

@@ -14,7 +14,7 @@ export default function AboutPage() {
       </Link>
       <img
         src="/km10old.bmp"
-        className="w-1/3 h-auto rounded-md mx-auto shadow-sm shadow-gray-500 "
+        className="w-full sm:w-2/3 md:w-1/2 lg:w-1/3 h-auto rounded-md mx-auto shadow-sm shadow-gray-500"
       />
       <h1 className="text-2xl font-bold text-gray-950 mb-6 border-l-4 border-emerald-700 pl-4">
         พันธกิจของเรา

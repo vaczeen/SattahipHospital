@@ -14,7 +14,10 @@ import {
   Printer,
   MapPin,
   ArrowRight,
+  ChevronLeft,
 } from "lucide-react";
+import Link from "next/link";
+
 
 interface Contact {
   name: string;
@@ -172,6 +175,13 @@ export default function TelephoneDirectoryPage() {
     <div className="min-h-screen bg-gray-50/50 pb-20">
       {/* Header / Hero Section */}
       <div className="bg-gradient-to-r from-emerald-600 via-emerald/90 to-teal-800 text-white pt-16 pb-24 px-4">
+        <Link
+          href="/main/employee"
+          className="inline-flex px-32 items-center gap-2 text-xl font-medium text-white hover:text-gray-200 transition-colors mb-6 group "
+        >
+          <ChevronLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform " />{" "}
+          ก่อนหน้า
+        </Link>
         <div className="container mx-auto text-center">
           <div className="inline-flex items-center justify-center p-3 bg-white/10 rounded-2xl mb-6 backdrop-blur-sm border border-white/20">
             <Phone className="w-8 h-8 text-white" />

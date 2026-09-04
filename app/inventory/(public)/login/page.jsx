@@ -63,7 +63,7 @@ const Login = () => {
             <div className="bg-white/10 backdrop-blur-sm p-2.5 rounded-xl">
               <KeyRound className="w-10 h-10 text-white" />
             </div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">Login</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold text-white tracking-wide">Login</h1>
           </div>
           <div className="flex gap-1 items-center">
             <div className="justify-items-center w-full">
@@ -87,7 +87,7 @@ const Login = () => {
                   />
                 </div>
                 <div className="p-4">
-                  <button className="py-2 px-8 rounded-xl bg-white text-gray-950 shadow-xl hover:bg-gray-100 font-semibold tracking-tight">
+                  <button className="py-2 px-8 rounded-xl bg-white text-gray-950 shadow-xl hover:bg-gray-100 font-semibold tracking-wide">
                     Login
                   </button>
                 </div>

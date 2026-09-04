@@ -10,6 +10,13 @@ const kanit = Kanit({
   variable: "--font-kanit",
 });
 
+const serithai = localFont({
+  src: "./fonts/Serithai-Regular.ttf",
+  weight: "400",
+  style: "normal",
+  variable: "--font-serithai",
+});
+
 // Configure Attha Loopless
 const tidy = localFont({
   src: [
@@ -41,7 +48,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${inter.className} ${kanit.variable} ${tidy.variable} min-h-screen flex flex-col font-sans`}
+        className={`${serithai.className} ${kanit.variable} ${tidy.variable} min-h-screen flex flex-col font-sans`}
       >
         {children}
       </body>

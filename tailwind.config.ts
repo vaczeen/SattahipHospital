@@ -63,6 +63,7 @@ const config: Config = {
             fontFamily: {
                 kanit: ["var(--font-kanit)"],
                 tidy: ["var(--font-tidy)"],
+                serithai: ["var(--font-serithai)"],
             },
             
         },

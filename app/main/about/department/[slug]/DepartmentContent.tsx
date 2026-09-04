@@ -253,7 +253,7 @@ export default function DepartmentContent({
               <div className="relative pt-4 flex flex-col items-center">
                 {currentHead ? (
                   <div className="flex flex-col items-center">
-                    <div className="bg-primary/5 px-4 py-1 rounded-full text-[10px] font-bold text-primary uppercase tracking-tighter mb-4 border border-primary/10">
+                    <div className="bg-primary/5 px-4 py-1 rounded-full text-[10px] font-bold text-primary uppercase tracking-wide mb-4 border border-primary/10">
                       หัวหน้ากลุ่มงานปัจจุบัน
                     </div>
                     <DoctorCard

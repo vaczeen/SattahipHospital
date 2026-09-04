@@ -36,7 +36,7 @@ const ListCart = () => {
           <div className="bg-white/10 backdrop-blur-sm p-2.5 rounded-xl">
             <ListCheck className="w-6 h-6 text-white" />
           </div>
-          <h1 className="text-2xl font-bold text-white tracking-tight">
+          <h1 className="text-2xl font-bold text-white tracking-wide">
             รายการพัสดุ {cart.length} รายการ
           </h1>
         </div>

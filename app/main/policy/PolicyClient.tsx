@@ -34,6 +34,7 @@ const CATEGORIES = [
   "ประกาศกระทรวง",
   "แนวทางปฏิบัติ",
   "กฎระเบียบ",
+  "แผนปฏิบัติการ",
   "อื่นๆ",
 ];
 
@@ -52,6 +53,7 @@ const CATEGORY_COLORS: Record<string, string> = {
   ประกาศกระทรวง: "bg-purple-50 text-purple-700 border-purple-200",
   แนวทางปฏิบัติ: "bg-emerald-50 text-emerald-700 border-emerald-200",
   กฎระเบียบ: "bg-red-50 text-red-700 border-red-200",
+  แผนปฏิบัติการ: "bg-amber-50 text-amber-700 border-amber-200",
   ทั่วไป: "bg-gray-50 text-gray-700 border-gray-200",
   อื่นๆ: "bg-yellow-50 text-yellow-700 border-yellow-200",
 };
@@ -202,7 +204,7 @@ export default function PolicyClient({ docs }: { docs: PolicyDoc[] }) {
             <>
               <button
                 onClick={() => setShowUploadForm((v) => !v)}
-                className="flex items-center gap-2 text-sm font-medium bg-emerald-700 text-white rounded-lg px-4 py-2 hover:bg-emerald-800 transition-all shadow-sm"
+                className="flex items-center gap-2 text-sm font-medium bg-amber-500 text-white rounded-lg px-4 py-2 hover:bg-amber-600 transition-all shadow-sm"
               >
                 <Plus className="w-4 h-4" />
                 เพิ่มเอกสาร
@@ -218,7 +220,7 @@ export default function PolicyClient({ docs }: { docs: PolicyDoc[] }) {
           ) : (
             <button
               onClick={() => setShowPasswordModal(true)}
-              className="flex items-center gap-2 text-sm text-muted-foreground hover:text-emerald-700 border border-border rounded-lg px-4 py-2 hover:border-emerald-700 hover:bg-primary/5 transition-all"
+              className="flex items-center gap-2 text-sm text-amber-500 hover:text-amber-700 border border-border rounded-lg px-4 py-2 hover:border-amber-700 hover:bg-white transition-all"
             >
               <Settings className="w-4 h-4" />
               ลงข้อมูล (สำหรับเจ้าหน้าที่)
@@ -231,7 +233,7 @@ export default function PolicyClient({ docs }: { docs: PolicyDoc[] }) {
       {isAdmin && showUploadForm && (
         <div className="bg-white border border-border rounded-2xl p-6 shadow-sm space-y-4">
           <div className="flex items-center gap-2 mb-2">
-            <Upload className="w-5 h-5 text-emerald-700" />
+            <Upload className="w-5 h-5 text-amber-500" />
             <h3 className="font-semibold text-gray-800">เพิ่มเอกสารใหม่</h3>
           </div>
           <form onSubmit={handleUpload} className="space-y-4">
@@ -371,7 +373,7 @@ export default function PolicyClient({ docs }: { docs: PolicyDoc[] }) {
               <button
                 type="submit"
                 disabled={isPending}
-                className="flex-1 px-4 py-2.5 bg-emerald-700 text-white rounded-lg text-sm font-bold hover:bg-emerald-800 transition-colors disabled:opacity-60 flex items-center justify-center gap-2"
+                className="flex-1 px-4 py-2.5 bg-amber-500 text-white rounded-lg text-sm font-bold hover:bg-amber-600 transition-colors disabled:opacity-60 flex items-center justify-center gap-2"
               >
                 {isPending ? (
                   <span className="inline-block w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -391,7 +393,7 @@ export default function PolicyClient({ docs }: { docs: PolicyDoc[] }) {
           <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-sm mx-4 space-y-5">
             <div className="text-center space-y-2">
               <div className="bg-primary/10 w-14 h-14 rounded-full flex items-center justify-center mx-auto">
-                <Lock className="w-7 h-7 text-emerald-700" />
+                <Lock className="w-7 h-7 text-amber-500" />
               </div>
               <h3 className="text-lg font-bold text-gray-800">
                 ยืนยันตัวตนเจ้าหน้าที่
@@ -412,7 +414,7 @@ export default function PolicyClient({ docs }: { docs: PolicyDoc[] }) {
                   "w-full px-4 py-2.5 border rounded-lg text-sm outline-none transition-all",
                   passwordError
                     ? "border-red-400 bg-red-50 placeholder-red-300 animate-pulse"
-                    : "border-border focus:border-emerald-700 focus:ring-2 focus:ring-primary/20",
+                    : "border-border focus:border-amber-500 focus:ring-2 focus:ring-primary/20",
                 )}
               />
               {passwordError && (
@@ -434,7 +436,7 @@ export default function PolicyClient({ docs }: { docs: PolicyDoc[] }) {
               </button>
               <button
                 onClick={handleUnlock}
-                className="flex-1 px-4 py-2.5 bg-emerald-700 text-white rounded-lg text-sm font-bold hover:bg-emerald-800 transition-colors"
+                className="flex-1 px-4 py-2.5 bg-amber-500 text-white rounded-lg text-sm font-bold hover:bg-amber-600 transition-colors"
               >
                 เข้าสู่ระบบ
               </button>
@@ -531,7 +533,7 @@ export default function PolicyClient({ docs }: { docs: PolicyDoc[] }) {
                 onClick={() => toggleYear(group.year)}
                 className="w-full flex items-center justify-between p-5 bg-primary/5 hover:bg-primary/10 transition-colors"
               >
-                <h3 className="text-xl font-bold text-emerald-700 flex items-center gap-2">
+                <h3 className="text-xl font-bold text-amber-500 flex items-center gap-2">
                   <Calendar className="w-5 h-5" />
                   ปีงบประมาณ {group.year}
                   <span className="text-sm font-normal text-primary/60 ml-1">
@@ -598,7 +600,7 @@ export default function PolicyClient({ docs }: { docs: PolicyDoc[] }) {
                           href={doc.fileUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-border text-emerald-700 text-sm font-medium rounded-lg hover:bg-emerald-800 hover:text-white hover:border-emerald-700 transition-all shadow-sm whitespace-nowrap"
+                          className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-border text-amber-500 text-sm font-medium rounded-lg hover:bg-amber-500 hover:text-white hover:border-amber-500 transition-all shadow-sm whitespace-nowrap"
                         >
                           <Download className="w-4 h-4" />
                           ดาวน์โหลด
@@ -624,7 +626,7 @@ export default function PolicyClient({ docs }: { docs: PolicyDoc[] }) {
 
       {/* Admin badge */}
       {isAdmin && (
-        <div className="flex items-center justify-center gap-2 text-xs text-emerald-700 bg-primary/5 border border-primary/20 rounded-full px-4 py-2 w-fit mx-auto">
+        <div className="flex items-center justify-center gap-2 text-xs text-amber-500 bg-primary/5 border border-primary/20 rounded-full px-4 py-2 w-fit mx-auto">
           <Shield className="w-3.5 h-3.5" />
           โหมดจัดการเอกสาร (เจ้าหน้าที่)
         </div>

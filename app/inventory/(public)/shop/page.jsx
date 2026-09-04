@@ -83,7 +83,7 @@ const Shop = () => {
             <Package className="w-6 h-6 text-white" />
           </div>
           <div>
-            <h1 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
+            <h1 className="text-xl sm:text-2xl font-bold text-white tracking-wide">
               พัสดุทั้งหมด
             </h1>
             <p className="text-sm text-gray-400 mt-0.5">

@@ -5,8 +5,8 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 
 export const metadata = {
-  title: "ประกาศและนโยบาย | โรงพยาบาลสัตหีบ กม.10",
-  description: "ประกาศและนโยบายต่างๆ ของโรงพยาบาลสัตหีบ กม.10",
+  title: "ประกาศและนโยบาย | โรงพยาบาลสัตหีบ",
+  description: "ประกาศและนโยบายต่างๆ ของโรงพยาบาลสัตหีบ",
 };
 
 export default async function PolicyPage() {
@@ -35,8 +35,8 @@ export default async function PolicyPage() {
             </div>
 
             <div className="text-center md:text-left">
-              <h1 className="text-3xl font-serif font-bold mb-3">
-                ประกาศและนโยบาย
+              <h1 className="text-3xl  font-bold mb-3">
+                ประกาศนโยบายและแผนปฏิบัติการ
               </h1>
               <p className="text-slate-600 max-w-2xl text-lg font-medium opacity-80">
                 ประกาศ นโยบาย ระเบียบ และแนวทางปฏิบัติต่างๆ ของโรงพยาบาลสัตหีบ

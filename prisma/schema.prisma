@@ -147,6 +147,21 @@ model Image {
   productId  Int
 }
 
+model ITAItem {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String?
+  fileUrl     String?
+  year        Int      @default(0) // 0=current year, 2023,2024,2025...
+  level       Int      @default(0) // 0=root, 1=sub, 2=sub-sub
+  parentId    Int?
+  parent      ITAItem? @relation("ITATree", fields: [parentId], references: [id], onDelete: Cascade)
+  children    ITAItem[] @relation("ITATree")
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
 model Department  {
   id         Int      @id @default(autoincrement())
   dept       String
