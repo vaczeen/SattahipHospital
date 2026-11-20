@@ -5,7 +5,8 @@ import AnnouncementPopup from "@/components/AnnouncementPopup";
 export default function Home() {
   return (
     <>
-     <AnnouncementPopup />
+    {/* ประกาศ */}
+    {/* <AnnouncementPopup />  */}
       <Hero />
       <HomePage />
     </>

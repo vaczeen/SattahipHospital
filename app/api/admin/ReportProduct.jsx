@@ -25,13 +25,18 @@ const ReportProduct = () => {
   const [filteredMovements, setFilteredMovements] = useState([]);
   const [filters, setFilters] = useState({
     product: "ALL",
+    productSearch: "",
     startDate: "",
     endDate: "",
   });
   const [page, setPage] = useState(1);
+  const [showProductDropdown, setShowProductDropdown] = useState(false);
 
-  const totalPages = Math.max(1, Math.ceil(filteredMovements.length / PAGE_SIZE));
-  const paginatedMovements  = filteredMovements.slice(
+  const totalPages = Math.max(
+    1,
+    Math.ceil(filteredMovements.length / PAGE_SIZE),
+  );
+  const paginatedMovements = filteredMovements.slice(
     (page - 1) * PAGE_SIZE,
     page * PAGE_SIZE,
   );
@@ -135,13 +140,22 @@ const ReportProduct = () => {
 
   const uniqueProducts = [...new Set(movements.map((m) => m.productName))];
 
+  const filteredProductOptions = uniqueProducts.filter((name) =>
+    name.toLowerCase().includes(filters.productSearch.toLowerCase()),
+  );
+
   const handleFilterChange = (key, value) => {
     setFilters((prev) => ({ ...prev, [key]: value }));
     setPage(1);
   };
 
   const handleResetFilters = () => {
-    setFilters({ product: "ALL", startDate: "", endDate: "" });
+    setFilters({
+      product: "ALL",
+      productSearch: "",
+      startDate: "",
+      endDate: "",
+    }); // ← เพิ่ม productSearch: ""
     setPage(1);
   };
 
@@ -169,18 +183,74 @@ const ReportProduct = () => {
             <label className="text-sm font-medium text-gray-400 mb-1">
               Title
             </label>
-            <select
-              value={filters.product}
-              onChange={(e) => handleFilterChange("product", e.target.value)}
-              className="bg-gray-200 border border-gray-600 text-gray-950 text-sm rounded-lg p-2.5 min-w-[200px] outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="ALL">พัสดุทั้งหมด</option>
-              {uniqueProducts.map((name, index) => (
-                <option key={index} value={name}>
-                  {name}
-                </option>
-              ))}
-            </select>
+            <input
+              type="text"
+              value={filters.productSearch}
+              onChange={(e) => {
+                setFilters((prev) => ({
+                  ...prev,
+                  productSearch: e.target.value,
+                  product: "ALL",
+                }));
+                setShowProductDropdown(true);
+                setPage(1);
+              }}
+              onFocus={() => setShowProductDropdown(true)}
+              onBlur={() =>
+                setTimeout(() => setShowProductDropdown(false), 200)
+              }
+              placeholder="พิมพ์ค้นหาพัสดุ..."
+              className="bg-gray-200 border border-gray-600 text-gray-950 text-sm rounded-lg p-2.5 outline-none focus:ring-2 focus:ring-blue-500"
+            />
+
+            {/* Dropdown */}
+            {showProductDropdown && (
+              <div className="absolute top-full left-0 right-0 z-10 bg-white border border-gray-300 rounded-lg shadow-lg max-h-48 overflow-y-auto mt-1">
+                {/* ตัวเลือก "ทั้งหมด" */}
+                <div
+                  onMouseDown={() => {
+                    setFilters((prev) => ({
+                      ...prev,
+                      product: "ALL",
+                      productSearch: "",
+                    }));
+                    setShowProductDropdown(false);
+                    setPage(1);
+                  }}
+                  className="px-3 py-2 text-sm cursor-pointer hover:bg-blue-50 text-gray-700 border-b"
+                >
+                  พัสดุทั้งหมด
+                </div>
+
+                {filteredProductOptions.length > 0 ? (
+                  filteredProductOptions.map((name, index) => (
+                    <div
+                      key={index}
+                      onMouseDown={() => {
+                        setFilters((prev) => ({
+                          ...prev,
+                          product: name,
+                          productSearch: name,
+                        }));
+                        setShowProductDropdown(false);
+                        setPage(1);
+                      }}
+                      className={`px-3 py-2 text-sm cursor-pointer hover:bg-blue-50 text-gray-700 ${
+                        filters.product === name
+                          ? "bg-blue-100 font-medium"
+                          : ""
+                      }`}
+                    >
+                      {name}
+                    </div>
+                  ))
+                ) : (
+                  <div className="px-3 py-2 text-sm text-gray-400 italic">
+                    ไม่พบพัสดุ
+                  </div>
+                )}
+              </div>
+            )}
           </div>
 
           <div className="md:col-span-2 flex flex-col space-y-1">
