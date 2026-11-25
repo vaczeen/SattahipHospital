@@ -8,18 +8,25 @@ import { ChevronLeft } from "lucide-react";
 import prisma from "@/lib/prisma";
 import DepartmentContent from "./DepartmentContent";
 
-export default async function DepartmentDetailPage({params}) {
+interface DepartmentDetailPageProps {
+  params: Promise<{
+    slug: string;
+  }>;
+}
+
+export default async function DepartmentDetailPage({params,}: DepartmentDetailPageProps) {
+const { slug } = await params;
   // ← ดึง style จาก file
-  const deptStyle = departmentsData.find((d) => d.slug === params.slug);
+  const deptStyle = departmentsData.find((d) => d.slug === slug);
 
   // ← ดึง label/description จาก DB
   const deptConfig = await prisma.departmentConfig.findUnique({
-    where: { slug: params.slug },
+    where: { slug: slug },
   });
 
   if (!deptStyle || !deptConfig) notFound();
 
-  const documents = await getDepartmentDocuments(params.slug);
+  const documents = await getDepartmentDocuments(slug);
 
   return (
     <div className="min-h-screen bg-slate-50/50">
@@ -69,7 +76,7 @@ export default async function DepartmentDetailPage({params}) {
       {/* Main Content Section */}
       <div className="container mx-auto px-4 -mt-10 pb-20">
         <DepartmentContent
-          slug={params.slug}
+          slug={slug}
           initialDocuments={documents}
           label={deptConfig.label}
           description={deptConfig.description ?? ""}

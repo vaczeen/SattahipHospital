@@ -8,7 +8,7 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_SECRET_KEY,
 });
 
-export async function POST(req: NextRequest) {
+export async function POST(req: NextRequest): Promise<NextResponse> {
   try {
     const authResult = await authCheck(req);
     if (authResult.error) {
@@ -24,19 +24,40 @@ export async function POST(req: NextRequest) {
 
     const { public_id } = await req.json();
     console.log(public_id);
+	
+	 if (!public_id || typeof public_id !== 'string') {
+      return NextResponse.json(
+        { message: 'Invalid public_id' },
+        { status: 400 }
+      );
+    }
 
-    return new Promise((resolve) => {
+ const result = await new Promise<NextResponse>((resolve) => {
       cloudinary.uploader.destroy(public_id, (error, result) => {
-        if (error) {
-          console.log(error);
-          resolve(NextResponse.json({ message: 'Server Error' }, { status: 500 }));
-        } else {
-          resolve(NextResponse.json('Remove Image Success.'));
+        if (error || result?.result !== 'ok') {
+          console.error('Cloudinary remove image error:', error || result);
+
+          resolve(
+            NextResponse.json(
+              { message: 'Server Error' },
+              { status: 500 }
+            )
+          );
+          return;
         }
+
+        resolve(
+          NextResponse.json('Remove Image Success.')
+        );
       });
     });
-  } catch (error) {
-    console.log(error);
-    return NextResponse.json({ message: 'Server Error' }, { status: 500 });
+  return result;
+     } catch (error) {
+     console.error('Remove image error:', error);
+
+    return NextResponse.json(
+      { message: 'Server Error' },
+      { status: 500 }
+    );
   }
 }

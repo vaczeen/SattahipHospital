@@ -15,6 +15,12 @@ export async function POST(req: NextRequest) {
     if (!user || !user.enabled) {
       return NextResponse.json({ message: 'User Not found or no Enabled.' }, { status: 400 });
     }
+	if (!user.password) {
+  return NextResponse.json(
+    { message: 'Password Invalid!!' },
+    { status: 400 }
+  );
+}
 
     // check password
     const isMatch = await bcrypt.compare(password, user.password);

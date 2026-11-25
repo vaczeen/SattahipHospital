@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "next build --turbopack",
+    "build": "prisma generate --schema=prisma/schema.prisma && prisma generate --schema=prisma/gtwprisma.prisma && next build --turbopack",
     "start": "next start",
     "lint": "eslint"
   },
@@ -43,6 +43,7 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/lodash-es": "^4.17.12",
     "@types/node": "^20.19.43",
     "@types/react": "^19",

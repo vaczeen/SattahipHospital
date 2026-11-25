@@ -1,10 +1,13 @@
 "use client";
 import { useEffect } from 'react';
+import type { ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
 import api from '@/lib/axios';
 import useEcomStore from '@/store/ecom-store';
 
-export default function InventoryLayout({ children }) {
+export default function InventoryLayout({ children, }: {
+  children: ReactNode;
+}) {
   const logout = useEcomStore((state) => state.logout);
   const router = useRouter();
 
