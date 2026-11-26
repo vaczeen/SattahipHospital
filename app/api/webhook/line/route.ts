@@ -1,13 +1,36 @@
 import { NextRequest, NextResponse } from "next/server";
+import crypto from "crypto";
 import prisma from "@/lib/prisma";
 
+function verifySignature(rawBody: string, signature: string | null): boolean {
+  const secret = process.env.LINE_CHANNEL_SECRET;
+  if (!secret || !signature) return false;
+
+  const expected = crypto
+    .createHmac("sha256", secret)
+    .update(rawBody)
+    .digest("base64");
+
+  // เทียบแบบ timing-safe
+  const a = Buffer.from(expected);
+  const b = Buffer.from(signature);
+  return a.length === b.length && crypto.timingSafeEqual(a, b);
+}
+
 export async function POST(req: NextRequest) {
+  // ต้องอ่านเป็น text ดิบก่อน ห้ามใช้ req.json() เพราะ signature คำนวณจาก raw body
+  const rawBody = await req.text();
+  const signature = req.headers.get("x-line-signature");
+
+  if (!verifySignature(rawBody, signature)) {
+    return NextResponse.json({ message: "Invalid signature" }, { status: 401 });
+  }
+
   try {
-    const body = await req.json();
+    const body = JSON.parse(rawBody);
     const events = body.events ?? [];
 
     for (const event of events) {
-      // รับเฉพาะ postback event
       if (event.type !== "postback") continue;
 
       const data = new URLSearchParams(event.postback.data);
@@ -15,37 +38,23 @@ export async function POST(req: NextRequest) {
       const orderId = Number(data.get("orderId"));
 
       if (action === "shipped" && orderId) {
-        // เช็คก่อนว่า order ยังเป็น Pending อยู่ไหม
-        const order = await prisma.order.findUnique({
-          where: { id: orderId },
-          select: { orderStatus: true },
-        });
-
-        if (!order) {
-          console.warn(`⚠️ ไม่พบ Order #${orderId}`);
-          continue;
-        }
-
-        if (order.orderStatus !== "Pending") {
-          console.warn(`⚠️ Order #${orderId} ไม่ใช่ Pending แล้ว (${order.orderStatus})`);
-          continue;
-        }
-
-        // อัพเดท status เป็น Shipped
-        await prisma.order.update({
-          where: { id: orderId },
+        // updateMany + เงื่อนไข Pending กัน race condition กรณีกดปุ่มซ้ำพร้อมกัน
+        const result = await prisma.order.updateMany({
+          where: { id: orderId, orderStatus: "Pending" },
           data: { orderStatus: "Shipped" },
         });
 
-        console.log(`✅ Order #${orderId} อัพเดทเป็น Shipped แล้ว`);
+        if (result.count === 0) {
+          console.warn(`⚠️ Order #${orderId} ไม่พบ หรือไม่ใช่ Pending แล้ว`);
+        } else {
+          console.log(`✅ Order #${orderId} อัพเดทเป็น Shipped แล้ว`);
+        }
       }
     }
 
-    // LINE ต้องการ 200 response เสมอ ไม่งั้นจะ retry
     return NextResponse.json({ ok: true }, { status: 200 });
   } catch (error) {
     console.error("❌ Webhook error:", error);
-    // ส่ง 200 กลับเสมอ เพื่อไม่ให้ LINE retry
     return NextResponse.json({ ok: false }, { status: 200 });
   }
 }
